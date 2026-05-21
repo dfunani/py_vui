@@ -1,0 +1,195 @@
+{
+  "adapter": "pyside6",
+  "meta": {
+    "createdAt": "2026-05-21T09:37:52.975254+00:00",
+    "name": "untitled",
+    "updatedAt": "2026-05-21T09:38:36.582509+00:00"
+  },
+  "nodes": {
+    "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6": {
+      "id": "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 480.0,
+          "w": 640.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "MainWindow",
+      "parentId": null,
+      "props": {
+        "height": 480.0,
+        "title": "Window",
+        "width": 640.0
+      },
+      "type": "window",
+      "zIndex": 0
+    },
+    "94e72b81-c158-4da9-a94d-3f6fcba85959": {
+      "id": "94e72b81-c158-4da9-a94d-3f6fcba85959",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 120.0,
+          "x": 15.0,
+          "y": 76.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "Line Edit",
+      "parentId": "d36913dd-3da6-4821-b0d4-887b077c1d30",
+      "props": {
+        "placeholder": "Enter text\u2026",
+        "text": "Goodbye World"
+      },
+      "type": "line_edit",
+      "zIndex": 0
+    },
+    "b8ba4785-7168-4ccf-a701-14c23a7b08e9": {
+      "id": "b8ba4785-7168-4ccf-a701-14c23a7b08e9",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 120.0,
+          "x": 14.0,
+          "y": 32.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "Line Edit",
+      "parentId": "d36913dd-3da6-4821-b0d4-887b077c1d30",
+      "props": {
+        "placeholder": "Enter text\u2026",
+        "text": "Hello World"
+      },
+      "type": "line_edit",
+      "zIndex": 0
+    },
+    "be3f8acc-e9d0-412a-9213-a12bde24828f": {
+      "id": "be3f8acc-e9d0-412a-9213-a12bde24828f",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 120.0,
+          "x": 206.0,
+          "y": 258.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "Checkbox",
+      "parentId": "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6",
+      "props": {
+        "checked": false,
+        "text": "Checkbox"
+      },
+      "type": "checkbox",
+      "zIndex": 0
+    },
+    "d36913dd-3da6-4821-b0d4-887b077c1d30": {
+      "id": "d36913dd-3da6-4821-b0d4-887b077c1d30",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 150.0,
+          "w": 200.0,
+          "x": 176.0,
+          "y": 87.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "Frame",
+      "parentId": "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6",
+      "props": {},
+      "type": "frame",
+      "zIndex": 0
+    },
+    "df218588-18c5-4c8f-be82-8a0393c4ddb5": {
+      "id": "df218588-18c5-4c8f-be82-8a0393c4ddb5",
+      "layout": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 120.0,
+          "x": 206.0,
+          "y": 296.0
+        },
+        "margins": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "name": "Button",
+      "parentId": "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6",
+      "props": {
+        "text": "Button"
+      },
+      "type": "button",
+      "zIndex": 0
+    }
+  },
+  "rootId": "7bb4cd35-b238-4873-a6f6-d8b6a43ae9a6",
+  "schemaVersion": "1"
+}

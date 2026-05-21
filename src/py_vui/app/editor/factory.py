@@ -48,6 +48,7 @@ def create_node(
     node_type: str,
     *,
     parent_id: str,
+    parent: Node | None = None,
     name: str | None = None,
     x: float = 8,
     y: float = 8,
@@ -65,14 +66,14 @@ def create_node(
                 name=display,
                 parent_id=parent_id,
                 layout=layout,
-                props=WindowProps(),
+                props=WindowProps(width=w, height=h),
             )
         case "frame":
             return FrameNode(
                 id=nid,
                 name=display,
                 parent_id=parent_id,
-                layout=LayoutSpec(box=Rect(x=x, y=y, w=200, h=150)),
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=w, h=h)),
                 props=FrameProps(),
             )
         case "label":

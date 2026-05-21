@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QMimeData, Qt
 from PySide6.QtGui import QDrag
 from PySide6.QtWidgets import QAbstractItemView, QListWidget, QListWidgetItem, QVBoxLayout, QWidget
 
@@ -34,7 +34,8 @@ class WidgetPalette(QWidget):
         if item is None:
             return
         widget_type = item.data(Qt.ItemDataRole.UserRole)
-        drag = QDrag(self._list)
-        mime = drag.mimeData()
+        mime = QMimeData()
         mime.setData(MIME_WIDGET, widget_type.encode())
+        drag = QDrag(self._list)
+        drag.setMimeData(mime)
         drag.exec(Qt.DropAction.CopyAction)

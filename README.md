@@ -30,13 +30,32 @@ uv run pytest -q       # run tests
 
 ### Editor workflow
 
-1. **Drag** widgets from the left palette onto the canvas (drop on a parent frame/window).
-2. **Move** widgets by dragging them on the canvas; edit **X/Y/W/H** in the inspector.
-3. **File → Save** writes `py_vui.json` in your project folder.
-4. **Build → Generate Code** writes `generated/ui_generated.py` and `generated/main.py`.
-5. **Build → Preview** (F5) runs the generated app in a subprocess.
+1. **Save your work:** **File → Save Project As…** — choose a parent folder (e.g. `~/Documents`). The editor creates `<name>/` (e.g. `untitled/`, `my-form/`).
+2. **Save again:** **File → Save Project** (⌘S) updates `py_vui.json` and `session.meta.json` in that folder.
+3. **Open later:** **File → Open Project Folder…** or **Open Recent**.
+4. **Edit:** drag widgets, move on canvas, inspector for properties.
+5. **Generate app:** **Build → Generate Code** → `<project>/app/`.
+6. **Run:**
+   ```bash
+   cd ~/Documents/untitled/app
+   pip install -r requirements.txt
+   python main.py
+   ```
 
-Open the sample project: `examples/fixtures/minimal.json`.
+Sample JSON only: **File → Open py_vui.json…** → `examples/fixtures/minimal.json`.
+
+### Saved project folder
+
+```
+~/Documents/my-ui/
+  py_vui.json
+  session.meta.json
+  app/              # created by Generate / Preview
+    main.py
+    ui_generated.py
+    requirements.txt
+    README.md
+```
 
 ## Repository layout
 

@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 
 class PropertyInspector(QWidget):
     document_changed = Signal()
+    document_dirty = Signal()
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
@@ -39,6 +40,14 @@ class PropertyInspector(QWidget):
         self._block = False
 
         layout = QVBoxLayout(self)
+        self._project_name = QLineEdit()
+        self._project_name.editingFinished.connect(self._apply_project_name)
+
+        project = QGroupBox("Project")
+        pf = QFormLayout(project)
+        pf.addRow("Project name", self._project_name)
+        layout.addWidget(project)
+
         self._form = QFormLayout()
         self._name = QLineEdit()
         self._name.editingFinished.connect(self._apply)
@@ -50,20 +59,18 @@ class PropertyInspector(QWidget):
         self._checked.stateChanged.connect(self._apply)
         self._x = QSpinBox()
         self._x.setRange(-9999, 9999)
-        self._x.valueChanged.connect(self._apply)
         self._y = QSpinBox()
         self._y.setRange(-9999, 9999)
-        self._y.valueChanged.connect(self._apply)
         self._w = QSpinBox()
         self._w.setRange(1, 9999)
-        self._w.valueChanged.connect(self._apply)
         self._h = QSpinBox()
         self._h.setRange(1, 9999)
-        self._h.valueChanged.connect(self._apply)
+        for spin in (self._x, self._y, self._w, self._h):
+            spin.editingFinished.connect(self._apply)
 
         common = QGroupBox("Common")
         cf = QFormLayout(common)
-        cf.addRow("Name", self._name)
+        cf.addRow("Widget name", self._name)
         cf.addRow("X", self._x)
         cf.addRow("Y", self._y)
         cf.addRow("W", self._w)
@@ -81,27 +88,62 @@ class PropertyInspector(QWidget):
     def bind(self, doc: ProjectDocument, history: History) -> None:
         self._doc = doc
         self._history = history
+        self._refresh_project_name()
+
+    def _refresh_project_name(self) -> None:
+        if self._doc is None:
+            return
+        self._project_name.blockSignals(True)
+        self._project_name.setText(self._doc.project.meta.name)
+        self._project_name.blockSignals(False)
+
+    def _apply_project_name(self) -> None:
+        if self._block or self._doc is None:
+            return
+        new_name = self._project_name.text().strip() or "untitled"
+        if new_name == self._doc.project.meta.name:
+            return
+        self._doc.project.meta.name = new_name
+        self.document_dirty.emit()
 
     def show_node(self, node_id: str | None) -> None:
         self._node_id = node_id
-        self._block = True
+        self._refresh_project_name()
         if not node_id or self._doc is None:
             self.setEnabled(False)
-            self._block = False
             return
         self.setEnabled(True)
         node = self._doc.get_node(node_id)
         box = node.layout.box
-        self._name.setText(node.name)
-        self._x.setValue(int(box.x))
-        self._y.setValue(int(box.y))
-        self._w.setValue(int(box.w))
-        self._h.setValue(int(box.h))
+        if isinstance(node, WindowNode):
+            display_w = int(node.props.width)
+            display_h = int(node.props.height)
+        else:
+            display_w = int(box.w)
+            display_h = int(box.h)
+
+        self._block = True
+        for widget, value in (
+            (self._name, node.name),
+            (self._x, int(box.x)),
+            (self._y, int(box.y)),
+            (self._w, display_w),
+            (self._h, display_h),
+        ):
+            widget.blockSignals(True)
+            if isinstance(widget, QLineEdit):
+                widget.setText(str(value))
+            else:
+                widget.setValue(value)
+            widget.blockSignals(False)
 
         self._text.setVisible(isinstance(node, (LabelNode, ButtonNode, LineEditNode, CheckboxNode)))
         self._placeholder.setVisible(isinstance(node, LineEditNode))
         self._checked.setVisible(isinstance(node, CheckboxNode))
 
+        self._text.blockSignals(True)
+        self._placeholder.blockSignals(True)
+        self._checked.blockSignals(True)
         if isinstance(node, WindowNode):
             self._text.setText(node.props.title)
         elif isinstance(node, LabelNode):
@@ -116,6 +158,9 @@ class PropertyInspector(QWidget):
             self._checked.setChecked(node.props.checked)
         else:
             self._text.clear()
+        self._text.blockSignals(False)
+        self._placeholder.blockSignals(False)
+        self._checked.blockSignals(False)
 
         self._block = False
 
@@ -139,8 +184,12 @@ class PropertyInspector(QWidget):
 
         if isinstance(node, WindowNode):
             data["props"]["title"] = self._text.text()
-            data["props"]["width"] = float(self._w.value())
-            data["props"]["height"] = float(self._h.value())
+            w = float(self._w.value())
+            h = float(self._h.value())
+            data["props"]["width"] = w
+            data["props"]["height"] = h
+            data["layout"]["box"]["w"] = w
+            data["layout"]["box"]["h"] = h
         elif isinstance(node, (LabelNode, ButtonNode, LineEditNode, CheckboxNode)):
             data["props"]["text"] = self._text.text()
         if isinstance(node, LineEditNode):

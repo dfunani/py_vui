@@ -9,10 +9,13 @@ from py_vui.model.serde import load_json
 def test_emit_minimal_contains_expected_symbols() -> None:
     p = load_json(Path("examples/fixtures/minimal.json").read_bytes())
     files = {f.path: f.content for f in emit_pyside_phase1(p)}
-    ui = files["generated/ui_generated.py"]
+    ui = files["ui_generated.py"]
     assert "def build_ui():" in ui
     assert "QFrame" in ui
     assert "QLabel" in ui
-    main = files["generated/main.py"]
+    main = files["main.py"]
     assert "QApplication" in main
     assert "from ui_generated import build_ui" in main
+    assert "_require_pyside6" in main
+    assert files["requirements.txt"].strip() == "PySide6>=6.6"
+    assert "pip install" in files["README.md"]

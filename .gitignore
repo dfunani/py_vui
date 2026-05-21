@@ -8,3 +8,13 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local editor output (use per-project app/ inside saved sessions)
+generated/
+sessions/*/
+!sessions/README.md
+
+# Local editor output (use per-project app/ inside saved sessions instead)
+generated/
+sessions/*/
+!sessions/README.md
