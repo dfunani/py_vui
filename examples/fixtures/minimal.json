@@ -1,0 +1,100 @@
+{
+    "adapter": "pyside6",
+    "meta": {
+        "name": "minimal"
+    },
+    "nodes": {
+        "11111111-1111-4111-8111-111111111111": {
+            "id": "11111111-1111-4111-8111-111111111111",
+            "layout": {
+                "anchors": {
+                    "bottom": false,
+                    "left": true,
+                    "right": false,
+                    "top": true
+                },
+                "box": {
+                    "h": 480,
+                    "w": 640,
+                    "x": 0,
+                    "y": 0
+                },
+                "margins": {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0
+                }
+            },
+            "name": "MainWindow",
+            "parentId": null,
+            "props": {
+                "height": 480,
+                "title": "Hello",
+                "width": 640
+            },
+            "type": "window",
+            "zIndex": 0
+        },
+        "22222222-2222-4222-8222-222222222222": {
+            "id": "22222222-2222-4222-8222-222222222222",
+            "layout": {
+                "anchors": {
+                    "bottom": false,
+                    "left": true,
+                    "right": false,
+                    "top": true
+                },
+                "box": {
+                    "h": 400,
+                    "w": 600,
+                    "x": 12,
+                    "y": 12
+                },
+                "margins": {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0
+                }
+            },
+            "name": "Content",
+            "parentId": "11111111-1111-4111-8111-111111111111",
+            "props": {},
+            "type": "frame",
+            "zIndex": 0
+        },
+        "33333333-3333-4333-8333-333333333333": {
+            "id": "33333333-3333-4333-8333-333333333333",
+            "layout": {
+                "anchors": {
+                    "bottom": false,
+                    "left": true,
+                    "right": false,
+                    "top": true
+                },
+                "box": {
+                    "h": 24,
+                    "w": 200,
+                    "x": 8,
+                    "y": 8
+                },
+                "margins": {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0
+                }
+            },
+            "name": "Title",
+            "parentId": "22222222-2222-4222-8222-222222222222",
+            "props": {
+                "text": "Welcome to py_vui"
+            },
+            "type": "label",
+            "zIndex": 0
+        }
+    },
+    "rootId": "11111111-1111-4111-8111-111111111111",
+    "schemaVersion": "1"
+}
