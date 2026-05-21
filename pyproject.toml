@@ -5,12 +5,32 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "py_vui"
 version = "0.1.0"
-description = "Visual authoring for Python UIs"
+description = "Visual authoring for Python UIs — drag-and-drop editor with PySide6 code generation"
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.12"
+authors = [{ name = "Delali Funani" }]
+keywords = ["ui", "qt", "pyside6", "visual", "codegen", "gui-builder"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: User Interfaces",
+]
 dependencies = [
     "pydantic>=2.6",
 ]
+
+[project.urls]
+Homepage = "https://github.com/dfunani/py_vui"
+Repository = "https://github.com/dfunani/py_vui"
+Documentation = "https://github.com/dfunani/py_vui#readme"
+Issues = "https://github.com/dfunani/py_vui/issues"
+Changelog = "https://github.com/dfunani/py_vui/releases"
 
 [project.optional-dependencies]
 dev = [
@@ -29,6 +49,8 @@ py_vui = "py_vui.app.qt_main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["py_vui*"]
+exclude = ["tests*"]
 
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]
