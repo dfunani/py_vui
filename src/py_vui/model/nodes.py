@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from py_vui.model.geometry import LayoutSpec
+from py_vui.model.theme import WidgetStyle
 
 
 class NodeCommon(BaseModel):
@@ -14,6 +15,8 @@ class NodeCommon(BaseModel):
     name: str
     parent_id: str | None = Field(default=None, alias="parentId")
     z_index: int = Field(default=0, ge=0, alias="zIndex")
+    enabled: bool = True
+    style: WidgetStyle | None = None
     layout: LayoutSpec = Field(default_factory=LayoutSpec)
 
 
@@ -54,6 +57,7 @@ class ButtonProps(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     text: str = ""
+    on_click: str | None = Field(default=None, alias="onClick")
 
 
 class ButtonNode(NodeCommon):
@@ -66,6 +70,7 @@ class LineEditProps(BaseModel):
 
     text: str = ""
     placeholder: str = ""
+    on_return: str | None = Field(default=None, alias="onReturn")
 
 
 class LineEditNode(NodeCommon):
@@ -78,6 +83,7 @@ class CheckboxProps(BaseModel):
 
     text: str = ""
     checked: bool = False
+    on_toggle: str | None = Field(default=None, alias="onToggle")
 
 
 class CheckboxNode(NodeCommon):

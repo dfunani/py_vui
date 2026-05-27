@@ -5,8 +5,10 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from py_vui.model.interaction import HandlerDef
 from py_vui.model.nodes import Node
 from py_vui.model.schema import SCHEMA_VERSION
+from py_vui.model.theme import ProjectTheme
 
 SchemaVersion = Literal["1"]
 AdapterId = Literal["pyside6"]
@@ -28,6 +30,8 @@ class py_vuiProject(BaseModel):
     adapter: AdapterId
     root_id: str = Field(..., alias="rootId")
     nodes: dict[str, Node]
+    theme: ProjectTheme = Field(default_factory=ProjectTheme)
+    handlers: dict[str, HandlerDef] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def keys_match_ids(self) -> py_vuiProject:

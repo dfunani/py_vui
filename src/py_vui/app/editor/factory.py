@@ -20,6 +20,7 @@ from py_vui.model.nodes import (
     WindowProps,
 )
 from py_vui.model.project import ProjectMeta, py_vuiProject
+from py_vui.model.theme import theme_for_preset
 
 
 def new_node_id() -> str:
@@ -41,6 +42,7 @@ def new_project(name: str = "untitled") -> py_vuiProject:
         adapter="pyside6",
         root_id=root_id,
         nodes={root_id: root},
+        theme=theme_for_preset("modern"),
     )
 
 

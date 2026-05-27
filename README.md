@@ -128,6 +128,12 @@ pip install "py-vui[gui]"
 py_vui
 ```
 
+## Phase 2 (interactive builder)
+
+Themes, per-widget styling, **button / field actions** (inline handler editor), and **drag resize** on the canvas. See [docs/PHASE2_UI.md](./docs/PHASE2_UI.md).
+
+**Roadmap (v1 → v2 → vfinal):** [docs/ROADMAP.md](./docs/ROADMAP.md)
+
 ## Goals
 
 - **Familiar workflow:** palette → canvas → inspector → generated code, with undo/redo and Git-friendly project files.
