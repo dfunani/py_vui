@@ -32,6 +32,7 @@ class py_vuiProject(BaseModel):
     nodes: dict[str, Node]
     theme: ProjectTheme = Field(default_factory=ProjectTheme)
     handlers: dict[str, HandlerDef] = Field(default_factory=dict)
+    tab_order: list[str] = Field(default_factory=list, alias="tabOrder")
 
     @model_validator(mode="after")
     def keys_match_ids(self) -> py_vuiProject:

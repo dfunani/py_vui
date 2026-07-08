@@ -8,10 +8,20 @@ from py_vui.app.editor.canvas import MIME_WIDGET
 
 WIDGET_TYPES = [
     ("frame", "Frame"),
+    ("group_box", "Group Box"),
+    ("scroll_area", "Scroll Area"),
+    ("tab_widget", "Tab Widget"),
     ("label", "Label"),
     ("button", "Button"),
     ("line_edit", "Line Edit"),
+    ("text_edit", "Text Edit"),
     ("checkbox", "Checkbox"),
+    ("radio_button", "Radio Button"),
+    ("combo_box", "Combo Box"),
+    ("list_widget", "List Widget"),
+    ("spin_box", "Spin Box"),
+    ("slider", "Slider"),
+    ("progress_bar", "Progress Bar"),
 ]
 
 

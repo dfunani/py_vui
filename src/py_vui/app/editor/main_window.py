@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import (
     QDialog,
@@ -17,15 +17,25 @@ from PySide6.QtWidgets import (
 )
 
 from py_vui.app.editor.canvas import DesignCanvas
+from py_vui.app.editor.clipboard_io import copy_subtree_to_clipboard, read_subtree_from_clipboard
 from py_vui.app.editor.inspector import PropertyInspector
 from py_vui.app.editor.palette import WidgetPalette
+from py_vui.app.editor.widget_tree import WidgetTreePanel
 from py_vui.app.editor.project_service import ProjectService
 from py_vui.app.editor.recent_projects import load_recent, remember
 from py_vui.app.editor.save_project_dialog import SaveProjectDialog
 from py_vui.app.editor.session_paths import SESSION_DOCUMENT, sanitize_project_slug
-from py_vui.commands import History
-from py_vui.model.document import ProjectDocument
-from py_vui.preview import run_preview
+from py_vui.commands import (
+    AddNodes,
+    AlignInParent,
+    DistributeNodes,
+    History,
+    collect_subtree_ids,
+    remap_subtree,
+)
+from py_vui.app.editor.preview_dock import LivePreviewDock
+from py_vui.app.editor.project_templates import list_templates, load_template
+from py_vui.model.serde import load_json_bytes
 
 
 class MainWindow(QMainWindow):
@@ -40,6 +50,7 @@ class MainWindow(QMainWindow):
 
         self._canvas = DesignCanvas()
         self._palette = WidgetPalette()
+        self._widget_tree = WidgetTreePanel()
         self._inspector = PropertyInspector()
         self._output = QPlainTextEdit()
         self._output.setReadOnly(True)
@@ -47,9 +58,16 @@ class MainWindow(QMainWindow):
 
         self._canvas.bind(self._doc, self._history)
         self._inspector.bind(self._doc, self._history)
+        self._widget_tree.bind(self._doc, self._history)
+
+        left = QSplitter(Qt.Orientation.Vertical)
+        left.addWidget(self._palette)
+        left.addWidget(self._widget_tree)
+        left.setStretchFactor(0, 0)
+        left.setStretchFactor(1, 1)
 
         splitter = QSplitter()
-        splitter.addWidget(self._palette)
+        splitter.addWidget(left)
         splitter.addWidget(self._canvas)
         splitter.addWidget(self._inspector)
         splitter.setStretchFactor(0, 0)
@@ -57,18 +75,28 @@ class MainWindow(QMainWindow):
         splitter.setStretchFactor(2, 0)
         self.setCentralWidget(splitter)
 
-        from PySide6.QtCore import Qt
-
         out_dock = QDockWidget("Output", self)
         out_dock.setWidget(self._output)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, out_dock)
+
+        self._preview_dock = LivePreviewDock()
+        self._preview_dock.status_message.connect(self.statusBar().showMessage)
+        preview_dock = QDockWidget("Live preview", self)
+        preview_dock.setWidget(self._preview_dock)
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, preview_dock)
 
         self.setStatusBar(QStatusBar(self))
         self._build_menus()
         self._build_toolbar()
         self._connect_signals()
+        self._widget_tree.refresh(select_id=self._doc.project.root_id)
         self._inspector.show_node(self._doc.project.root_id)
         self._update_title()
+
+        self._autosave_timer = QTimer(self)
+        self._autosave_timer.setInterval(60_000)
+        self._autosave_timer.timeout.connect(self._autosave_tick)
+        self._autosave_timer.start()
         self.statusBar().showMessage(
             "Save: picks a folder (e.g. Documents/untitled/) with py_vui.json + session.meta.json",
             15000,
@@ -83,6 +111,12 @@ class MainWindow(QMainWindow):
         self._act_new.setShortcut(QKeySequence.StandardKey.New)
         self._act_new.triggered.connect(self._new_project)
         file_menu.addAction(self._act_new)
+
+        new_tpl_menu = file_menu.addMenu("New from template")
+        for key, label in list_templates():
+            act = QAction(label, self)
+            act.triggered.connect(lambda _checked=False, k=key: self._new_from_template(k))
+            new_tpl_menu.addAction(act)
 
         self._act_open = QAction("&Open Project Folder…", self)
         self._act_open.setShortcut(QKeySequence.StandardKey.Open)
@@ -131,6 +165,41 @@ class MainWindow(QMainWindow):
         self._act_redo.setShortcut(QKeySequence.StandardKey.Redo)
         self._act_redo.triggered.connect(self._redo)
         edit_menu.addAction(self._act_redo)
+
+        edit_menu.addSeparator()
+        self._act_copy = QAction("&Copy", self)
+        self._act_copy.setShortcut(QKeySequence.StandardKey.Copy)
+        self._act_copy.triggered.connect(self._copy_selection)
+        edit_menu.addAction(self._act_copy)
+
+        self._act_paste = QAction("&Paste", self)
+        self._act_paste.setShortcut(QKeySequence.StandardKey.Paste)
+        self._act_paste.triggered.connect(self._paste_clipboard)
+        edit_menu.addAction(self._act_paste)
+
+        self._act_duplicate = QAction("&Duplicate", self)
+        self._act_duplicate.setShortcut("Ctrl+D")
+        self._act_duplicate.triggered.connect(self._duplicate_selection)
+        edit_menu.addAction(self._act_duplicate)
+
+        align_menu = edit_menu.addMenu("&Align in parent")
+        for mode, label in (
+            ("left", "Align left"),
+            ("center", "Align center"),
+            ("right", "Align right"),
+            ("top", "Align top"),
+            ("middle", "Align middle"),
+            ("bottom", "Align bottom"),
+        ):
+            act = QAction(label, self)
+            act.triggered.connect(lambda _checked=False, m=mode: self._align(m))
+            align_menu.addAction(act)
+
+        dist_menu = edit_menu.addMenu("&Distribute")
+        for axis, label in (("horizontal", "Distribute horizontally"), ("vertical", "Distribute vertically")):
+            act = QAction(label, self)
+            act.triggered.connect(lambda _checked=False, a=axis: self._distribute(a))
+            dist_menu.addAction(act)
 
         self._act_export = QAction("&Export Code…", self)
         self._act_export.setShortcut("Ctrl+E")
@@ -184,9 +253,21 @@ class MainWindow(QMainWindow):
         self._canvas.document_dirty.connect(self._on_document_dirty)
         self._inspector.document_changed.connect(self._on_layout_changed)
         self._inspector.document_dirty.connect(self._on_document_dirty)
+        self._widget_tree.node_selected.connect(self._on_tree_select)
+        self._widget_tree.structure_changed.connect(self._on_structure_changed)
+
+    def _on_tree_select(self, node_id: str) -> None:
+        self._canvas.select_node(node_id)
+        self._inspector.show_node(node_id)
+
+    def _on_structure_changed(self) -> None:
+        self._on_layout_changed()
+        self._widget_tree.refresh(select_id=self._canvas.selected_node_id())
 
     def _on_selection(self, node_id: str) -> None:
         self._inspector.show_node(node_id or None)
+        if node_id:
+            self._widget_tree.refresh(select_id=node_id)
 
     def _on_document_dirty(self) -> None:
         self._service.mark_dirty()
@@ -210,17 +291,45 @@ class MainWindow(QMainWindow):
             loc = f"unsaved ({sanitize_project_slug(name)})"
         self.setWindowTitle(f"{name}{star} — {loc} — py_vui")
 
+    def _bind_document(self) -> None:
+        self._canvas.bind(self._doc, self._history)
+        self._inspector.bind(self._doc, self._history)
+        self._widget_tree.bind(self._doc, self._history)
+        self._canvas.rebuild()
+        self._widget_tree.refresh(select_id=self._doc.project.root_id)
+        self._inspector.show_node(self._doc.project.root_id)
+        self._update_preview_dir()
+        self._update_title()
+
+    def _update_preview_dir(self) -> None:
+        if self._service.project_dir and (self._service.app_dir() / "main.py").is_file():
+            self._preview_dock.set_app_dir(self._service.app_dir())
+        else:
+            self._preview_dock.set_app_dir(None)
+
     def _new_project(self) -> None:
         if not self._confirm_discard():
             return
+        self._preview_dock.stop_preview()
         self._service = ProjectService.new()
         self._doc = self._service.doc
         self._history = History()
-        self._canvas.bind(self._doc, self._history)
-        self._inspector.bind(self._doc, self._history)
-        self._canvas.rebuild()
-        self._inspector.show_node(self._doc.project.root_id)
-        self._update_title()
+        self._bind_document()
+
+    def _new_from_template(self, key: str) -> None:
+        if not self._confirm_discard():
+            return
+        try:
+            self._preview_dock.stop_preview()
+            project = load_template(key)
+            self._service = ProjectService.new(project.meta.name)
+            self._service.doc.project = project
+            self._service.mark_dirty()
+            self._doc = self._service.doc
+            self._history = History()
+            self._bind_document()
+        except Exception as exc:
+            QMessageBox.critical(self, "Template failed", str(exc))
 
     def _default_parent_dir(self) -> str:
         if self._service.project_dir is not None:
@@ -260,8 +369,11 @@ class MainWindow(QMainWindow):
             self._history = History()
             self._canvas.bind(self._doc, self._history)
             self._inspector.bind(self._doc, self._history)
+            self._widget_tree.bind(self._doc, self._history)
             self._canvas.rebuild()
             self._canvas.select_node(self._doc.project.root_id)
+            self._widget_tree.refresh(select_id=self._doc.project.root_id)
+            self._offer_autosave_recovery()
             session_file = self._service.path or location
             remember(session_file)
             self._refresh_recent_menu()
@@ -407,10 +519,12 @@ class MainWindow(QMainWindow):
                 self._service.save()
             written = self._service.write_generated()
             app_dir = self._service.app_dir()
+            self._update_preview_dir()
             self._output.appendPlainText(
                 f"Generated in {app_dir}:\n" + "\n".join(f"  {p}" for p in written)
             )
             self.statusBar().showMessage(f"Generated app in {app_dir}", 3000)
+            self._preview_dock.restart_preview()
         except Exception as exc:
             QMessageBox.critical(self, "Generate failed", str(exc))
 
@@ -424,22 +538,12 @@ class MainWindow(QMainWindow):
                 )
                 return
             self._service.save()
-            written = self._service.write_generated()
-            app_dir = self._service.app_dir()
-            entry = app_dir / "main.py"
-            if not entry.is_file() and written:
-                entry = written[0].parent / "main.py"
-            self._output.appendPlainText(f"Preview: {entry}")
-            result = run_preview(app_dir, entry)
-            self._output.appendPlainText(result.stdout)
-            if result.stderr:
-                self._output.appendPlainText(result.stderr)
-            if result.returncode != 0:
-                QMessageBox.warning(
-                    self,
-                    "Preview exited with errors",
-                    result.stderr or f"exit code {result.returncode}",
-                )
+            self._service.write_generated()
+            self._update_preview_dir()
+            self._preview_dock.restart_preview()
+            self._output.appendPlainText(
+                f"Preview started: {self._service.app_dir() / 'main.py'}"
+            )
         except Exception as exc:
             QMessageBox.critical(self, "Preview failed", str(exc))
 
@@ -447,13 +551,93 @@ class MainWindow(QMainWindow):
         self._history.undo(self._doc)
         self._service.mark_dirty()
         self._canvas.rebuild()
+        self._widget_tree.refresh(select_id=self._canvas.selected_node_id())
         self._update_title()
 
     def _redo(self) -> None:
         self._history.redo(self._doc)
         self._service.mark_dirty()
         self._canvas.rebuild()
+        self._widget_tree.refresh(select_id=self._canvas.selected_node_id())
         self._update_title()
+
+    def _copy_selection(self) -> None:
+        node_id = self._canvas.selected_node_id()
+        if not node_id:
+            return
+        if copy_subtree_to_clipboard(self._doc, node_id):
+            self.statusBar().showMessage("Copied widget subtree", 2000)
+
+    def _paste_clipboard(self) -> None:
+        nodes_map = read_subtree_from_clipboard()
+        if not nodes_map:
+            return
+        parent_id = self._canvas.selected_node_id() or self._doc.project.root_id
+        new_root_id, clones = remap_subtree(nodes_map, offset_x=16, offset_y=16)
+        for i, clone in enumerate(clones):
+            if clone.id == new_root_id:
+                data = clone.model_dump()
+                data["parentId"] = parent_id
+                clones[i] = clone.__class__.model_validate(data)
+                break
+        self._history.push(self._doc, AddNodes(clones))
+        self._on_structure_changed()
+        self._canvas.select_node(new_root_id)
+
+    def _duplicate_selection(self) -> None:
+        node_id = self._canvas.selected_node_id()
+        if not node_id or node_id == self._doc.project.root_id:
+            return
+        ids = collect_subtree_ids(self._doc, node_id)
+        nodes_map = {nid: self._doc.get_node(nid) for nid in ids}
+        new_root_id, clones = remap_subtree(nodes_map, offset_x=16, offset_y=16)
+        self._history.push(self._doc, AddNodes(clones))
+        self._on_structure_changed()
+        self._canvas.select_node(new_root_id)
+
+    def _align(self, mode: str) -> None:
+        node_id = self._canvas.selected_node_id()
+        if not node_id or node_id == self._doc.project.root_id:
+            return
+        self._history.push(self._doc, AlignInParent(node_id=node_id, mode=mode))  # type: ignore[arg-type]
+        self._on_layout_changed()
+
+    def _distribute(self, axis: str) -> None:
+        ids = self._canvas.selected_node_ids()
+        if len(ids) < 2:
+            QMessageBox.information(self, "Distribute", "Select at least two widgets.")
+            return
+        self._history.push(self._doc, DistributeNodes(node_ids=ids, axis=axis))  # type: ignore[arg-type]
+        self._on_layout_changed()
+
+    def _autosave_tick(self) -> None:
+        if self._service.project_dir is None:
+            return
+        path = self._service.write_autosave()
+        if path:
+            self.statusBar().showMessage(f"Autosaved {path.name}", 2000)
+
+    def _offer_autosave_recovery(self) -> None:
+        recovery = self._service.autosave_recovery_path()
+        if recovery is None:
+            return
+        answer = QMessageBox.question(
+            self,
+            "Recover autosave?",
+            f"Found newer autosave:\n{recovery.name}\n\nRestore it?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        try:
+            project = load_json_bytes(recovery.read_bytes())
+            self._doc.project = project
+            self._service.mark_dirty()
+            self._canvas.rebuild()
+            self._widget_tree.refresh(select_id=self._doc.project.root_id)
+            self.statusBar().showMessage("Restored from autosave", 4000)
+        except Exception as exc:
+            QMessageBox.warning(self, "Recovery failed", str(exc))
 
     def _confirm_discard(self) -> bool:
         if not self._service.dirty:

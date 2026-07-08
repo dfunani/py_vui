@@ -30,4 +30,4 @@ Open an issue at [github.com/dfunani/py_vui/issues](https://github.com/dfunani/p
 
 ## Publishing releases (maintainers)
 
-See [docs/PUBLISHING.md](./docs/PUBLISHING.md).
+See [docs/tutorial.md — Phase 8](./docs/tutorial.md#phase-8--release--publishing).

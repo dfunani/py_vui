@@ -13,6 +13,7 @@ from py_vui.model.serde import dump_json, load_json_bytes
 
 from py_vui.app.editor.session_paths import (
     APP_SUBDIR,
+    AUTOSAVE_DOCUMENT,
     SESSION_DOCUMENT,
     SESSION_META,
     export_project_dir,
@@ -81,6 +82,7 @@ class ProjectService:
             app_version=__version__,
         )
         self.dirty = False
+        self.clear_autosave()
         return document_path
 
     def save_to_new_folder(self, parent_dir: Path, *, project_name: str | None = None) -> Path:
@@ -95,6 +97,34 @@ class ProjectService:
 
     def project_name(self) -> str:
         return self.doc.project.meta.name
+
+    def autosave_path(self) -> Path | None:
+        if self.project_dir is None:
+            return None
+        return self.project_dir / AUTOSAVE_DOCUMENT
+
+    def write_autosave(self) -> Path | None:
+        path = self.autosave_path()
+        if path is None or not self.dirty:
+            return None
+        path.write_text(dump_json(self.doc.project), encoding="utf-8")
+        return path
+
+    def clear_autosave(self) -> None:
+        path = self.autosave_path()
+        if path is not None and path.is_file():
+            path.unlink()
+
+    def autosave_recovery_path(self) -> Path | None:
+        path = self.autosave_path()
+        doc = self.path
+        if path is None or not path.is_file():
+            return None
+        if doc is None or not doc.is_file():
+            return path
+        if path.stat().st_mtime > doc.stat().st_mtime:
+            return path
+        return None
 
     def app_dir(self) -> Path:
         return self.project_dir / APP_SUBDIR if self.project_dir else Path.cwd() / APP_SUBDIR
@@ -118,7 +148,12 @@ class ProjectService:
 
     def _write_bundle(self, root: Path) -> list[Path]:
         written: list[Path] = []
-        for wf in emit_pyside_phase1(self.doc.project):
+        handlers_path = None
+        if self.project_dir is not None:
+            candidate = self.project_dir / APP_SUBDIR / "handlers.py"
+            if candidate.is_file():
+                handlers_path = candidate
+        for wf in emit_pyside_phase1(self.doc.project, handlers_path=handlers_path):
             out = root / wf.path
             out.write_text(wf.content, encoding="utf-8")
             written.append(out)

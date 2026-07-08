@@ -19,7 +19,8 @@ from py_vui.app.editor.canvas_resize import (
     compute_resized_box,
     handle_anchor,
 )
-from py_vui.commands import ReplaceNode, SetLayoutBox
+from py_vui.app.editor.snap import snap, snap_size
+from py_vui.commands import ReplaceNode, SetLayoutBox, SetLayoutBoxes
 from py_vui.model.document import ProjectDocument
 from py_vui.model.geometry import Rect
 from py_vui.model.nodes import ButtonNode, LabelNode, Node, WindowNode
@@ -46,6 +47,7 @@ class NodeGraphicsItem(QGraphicsRectItem):
         border_radius: int = 4,
         enabled: bool = True,
         font_size: int = 11,
+        font_family: str = "Sans Serif",
     ) -> None:
         super().__init__(0, 0, w, h)
         self.node_id = node_id
@@ -62,7 +64,11 @@ class NodeGraphicsItem(QGraphicsRectItem):
         self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsSelectable, True)
         self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemSendsGeometryChanges, True)
         self._label = QGraphicsSimpleTextItem(label, self)
-        self._label.setFont(QFont("Sans", font_size))
+        label_font = QFont()
+        if font_family:
+            label_font.setFamily(font_family)
+        label_font.setPointSize(font_size)
+        self._label.setFont(label_font)
         self._label.setBrush(QBrush(QColor(text_color)))
         self._label.setPos(6, 6)
         self._border_radius = border_radius
@@ -178,7 +184,8 @@ class DesignCanvas(QGraphicsView):
             text_color=text,
             border_radius=radius,
             enabled=node.enabled,
-            font_size=max(9, min(font_size, 16)),
+            font_size=max(8, font_size),
+            font_family=theme.font_family,
         )
         item.setPos(abs_pos)
         item.setZValue(node.z_index)
@@ -190,11 +197,8 @@ class DesignCanvas(QGraphicsView):
 
     def _on_selection_changed(self) -> None:
         self._sync_resize_handles()
-        selected = self._scene.selectedItems()
-        if len(selected) == 1 and isinstance(selected[0], NodeGraphicsItem):
-            self.selection_changed.emit(selected[0].node_id)
-        else:
-            self.selection_changed.emit("")
+        ids = self.selected_node_ids()
+        self.selection_changed.emit(ids[0] if ids else "")
 
     def _clear_resize_handles(self) -> None:
         for handle in self._resize_handles:
@@ -237,7 +241,9 @@ class DesignCanvas(QGraphicsView):
         self._resize_start_scene = scene_pos
         self._resize_start_box = box
         item = self._items[node_id]
+        item.setSelected(True)
         item.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable, False)
+        self.setDragMode(QGraphicsView.DragMode.NoDrag)
 
     def _update_resize(self, scene_pos: QPointF) -> None:
         if not self._resize_active or self._resize_node_id is None or self._resize_handle is None:
@@ -270,22 +276,33 @@ class DesignCanvas(QGraphicsView):
         self._layout_resize_handles(item)
 
     def _finish_resize(self) -> None:
+        for rh in self._resize_handles:
+            if rh._grabbing:
+                rh.ungrabMouse()
+                rh._grabbing = False
         if not self._resize_active or self._resize_node_id is None or self._doc is None:
             return
         if self._history is None:
             self._resize_active = False
+            self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
             return
         node_id = self._resize_node_id
         item = self._items.get(node_id)
         if item is None:
             self._resize_active = False
+            self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
             return
         node = self._doc.get_node(node_id)
         parent_abs = self._abs_pos.get(node.parent_id or "", QPointF(0, 0))
         rect = item.rect()
         local_x = item.pos().x() - parent_abs.x()
         local_y = item.pos().y() - parent_abs.y()
-        new_box = Rect(x=local_x, y=local_y, w=rect.width(), h=rect.height())
+        new_box = Rect(
+            x=snap(local_x),
+            y=snap(local_y),
+            w=snap_size(rect.width()),
+            h=snap_size(rect.height()),
+        )
         before = node
         if isinstance(node, WindowNode):
             data = node.model_dump()
@@ -314,15 +331,23 @@ class DesignCanvas(QGraphicsView):
             QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable,
             not is_root and before.enabled,
         )
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
         self.rebuild()
         self.select_node(node_id)
         self.layout_changed.emit()
 
+    def selected_node_ids(self) -> list[str]:
+        if self._doc is None:
+            return []
+        return [
+            it.node_id
+            for it in self._scene.selectedItems()
+            if isinstance(it, NodeGraphicsItem) and it.node_id != self._doc.project.root_id
+        ]
+
     def selected_node_id(self) -> str | None:
-        selected = self._scene.selectedItems()
-        if len(selected) == 1 and isinstance(selected[0], NodeGraphicsItem):
-            return selected[0].node_id
-        return None
+        ids = self.selected_node_ids()
+        return ids[0] if ids else None
 
     def select_node(self, node_id: str) -> None:
         item = self._items.get(node_id)
@@ -416,16 +441,28 @@ class DesignCanvas(QGraphicsView):
             default_w, default_h = 200.0, 150.0
         elif widget_type == "line_edit":
             default_w, default_h = 160.0, 28.0
+        elif widget_type == "text_edit":
+            default_w, default_h = 160.0, 80.0
+        elif widget_type == "combo_box":
+            default_w, default_h = 140.0, 28.0
+        elif widget_type in ("tab_widget", "group_box"):
+            default_w, default_h = 280.0, 200.0
+        elif widget_type == "list_widget":
+            default_w, default_h = 140.0, 100.0
+        elif widget_type == "slider":
+            default_w, default_h = 160.0, 28.0
+        elif widget_type == "progress_bar":
+            default_w, default_h = 160.0, 24.0
         else:
             default_w, default_h = 120.0, 32.0
 
         margin = 8.0
         max_w = max(40.0, pw - margin * 2)
         max_h = max(24.0, ph - margin * 2)
-        w = min(default_w, max_w)
-        h = min(default_h, max_h)
-        x = max(margin, min(rel.x(), pw - w - margin))
-        y = max(margin, min(rel.y(), ph - h - margin))
+        w = snap_size(min(default_w, max_w))
+        h = snap_size(min(default_h, max_h))
+        x = snap(max(margin, min(rel.x(), pw - w - margin)))
+        y = snap(max(margin, min(rel.y(), ph - h - margin)))
         return x, y, w, h
 
     def _parent_at(self, scene_pos: QPointF) -> str | None:
@@ -451,6 +488,13 @@ class DesignCanvas(QGraphicsView):
                 return parent.node_id
         return None
 
+    def mouseMoveEvent(self, event) -> None:
+        if self._resize_active:
+            self._update_resize(self.mapToScene(event.position().toPoint()))
+            event.accept()
+            return
+        super().mouseMoveEvent(event)
+
     def mouseReleaseEvent(self, event) -> None:
         if self._resize_active:
             self._finish_resize()
@@ -462,32 +506,73 @@ class DesignCanvas(QGraphicsView):
             return
         if self._rebuild_guard or self._doc is None or self._history is None:
             return
-        moved_id = self.selected_node_id()
-        if not moved_id or moved_id == self._doc.project.root_id:
+        moved_ids = self.selected_node_ids()
+        if not moved_ids:
             return
-        item = self._items.get(moved_id)
-        if item is None:
+        updates: list[tuple[str, Rect]] = []
+        for moved_id in moved_ids:
+            item = self._items.get(moved_id)
+            if item is None:
+                continue
+            node = self._doc.get_node(moved_id)
+            parent_abs = self._abs_pos.get(node.parent_id or "", QPointF(0, 0))
+            box = node.layout.box
+            expected = parent_abs + QPointF(box.x, box.y)
+            actual = item.pos()
+            if abs(actual.x() - expected.x()) < 0.5 and abs(actual.y() - expected.y()) < 0.5:
+                continue
+            new_x = snap(actual.x() - parent_abs.x())
+            new_y = snap(actual.y() - parent_abs.y())
+            if abs(new_x - box.x) > 0.5 or abs(new_y - box.y) > 0.5:
+                updates.append((moved_id, Rect(x=new_x, y=new_y, w=box.w, h=box.h)))
+        if not updates:
             return
-        node = self._doc.get_node(moved_id)
-        parent_abs = self._abs_pos.get(node.parent_id or "", QPointF(0, 0))
-        box = node.layout.box
-        expected = parent_abs + QPointF(box.x, box.y)
-        actual = item.pos()
-        if abs(actual.x() - expected.x()) < 0.5 and abs(actual.y() - expected.y()) < 0.5:
+        if len(updates) == 1:
+            self._history.push(self._doc, SetLayoutBox(node_id=updates[0][0], new_box=updates[0][1]))
+        else:
+            self._history.push(self._doc, SetLayoutBoxes(updates=updates))
+        self.rebuild()
+        for nid, _ in updates:
+            self.select_node(nid)
+        self.layout_changed.emit()
+
+    def nudge_selected(self, dx: int, dy: int) -> None:
+        if self._doc is None or self._history is None:
             return
-        new_x = actual.x() - parent_abs.x()
-        new_y = actual.y() - parent_abs.y()
-        if abs(new_x - box.x) > 0.5 or abs(new_y - box.y) > 0.5:
-            new_box = Rect(x=new_x, y=new_y, w=box.w, h=box.h)
-            self._history.push(
-                self._doc,
-                SetLayoutBox(node_id=moved_id, new_box=new_box),
-            )
-            self.rebuild()
-            self.select_node(moved_id)
-            self.layout_changed.emit()
+        ids = self.selected_node_ids()
+        if not ids:
+            return
+        updates = []
+        for node_id in ids:
+            box = self._doc.get_node(node_id).layout.box
+            updates.append((node_id, Rect(x=box.x + dx, y=box.y + dy, w=box.w, h=box.h)))
+        if len(updates) == 1:
+            self._history.push(self._doc, SetLayoutBox(node_id=updates[0][0], new_box=updates[0][1]))
+        else:
+            self._history.push(self._doc, SetLayoutBoxes(updates=updates))
+        self.rebuild()
+        for nid, _ in updates:
+            self.select_node(nid)
+        self.layout_changed.emit()
 
     def keyPressEvent(self, event) -> None:
+        step = 8 if event.modifiers() & Qt.KeyboardModifier.ShiftModifier else 1
+        if event.key() == Qt.Key.Key_Left:
+            self.nudge_selected(-step, 0)
+            event.accept()
+            return
+        if event.key() == Qt.Key.Key_Right:
+            self.nudge_selected(step, 0)
+            event.accept()
+            return
+        if event.key() == Qt.Key.Key_Up:
+            self.nudge_selected(0, -step)
+            event.accept()
+            return
+        if event.key() == Qt.Key.Key_Down:
+            self.nudge_selected(0, step)
+            event.accept()
+            return
         if event.key() == Qt.Key.Key_Delete and self._doc and self._history:
             node_id = self.selected_node_id()
             if node_id and node_id != self._doc.project.root_id:

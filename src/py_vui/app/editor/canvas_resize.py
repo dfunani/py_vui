@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QGraphicsRectItem
 if TYPE_CHECKING:
     from py_vui.app.editor.canvas import DesignCanvas, NodeGraphicsItem
 
-HANDLE_SIZE = 8.0
+HANDLE_SIZE = 10.0
 MIN_WIDGET_W = 32.0
 MIN_WIDGET_H = 20.0
 
@@ -99,8 +99,10 @@ class ResizeHandleItem(QGraphicsRectItem):
         self.setAcceptedMouseButtons(Qt.MouseButton.LeftButton)
         self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsSelectable, False)
         self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable, False)
+        self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsFocusable, True)
         self.setZValue(10_000)
         self.setCursor(_HANDLE_CURSORS[handle])
+        self._grabbing = False
 
     def hoverEnterEvent(self, event) -> None:
         self.setBrush(QBrush(QColor(255, 200, 120)))
@@ -113,13 +115,20 @@ class ResizeHandleItem(QGraphicsRectItem):
     def mousePressEvent(self, event) -> None:
         parent = self.parentItem()
         if isinstance(parent, NodeGraphicsItem):
+            self.grabMouse()
+            self._grabbing = True
             self._canvas._begin_resize(parent.node_id, self._handle, event.scenePos())
         event.accept()
 
     def mouseMoveEvent(self, event) -> None:
-        self._canvas._update_resize(event.scenePos())
+        if self._canvas._resize_active:
+            self._canvas._update_resize(event.scenePos())
         event.accept()
 
     def mouseReleaseEvent(self, event) -> None:
-        self._canvas._finish_resize()
+        if self._grabbing:
+            self.ungrabMouse()
+            self._grabbing = False
+        if self._canvas._resize_active:
+            self._canvas._finish_resize()
         event.accept()

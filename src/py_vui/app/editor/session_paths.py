@@ -7,6 +7,7 @@ from pathlib import Path
 
 SESSION_DOCUMENT = "py_vui.json"
 SESSION_META = "session.meta.json"
+AUTOSAVE_DOCUMENT = ".py_vui.autosave.json"
 APP_SUBDIR = "app"
 SESSION_FORMAT = "py_vui-session-v1"
 

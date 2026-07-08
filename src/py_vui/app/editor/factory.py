@@ -9,13 +9,33 @@ from py_vui.model.nodes import (
     ButtonProps,
     CheckboxNode,
     CheckboxProps,
+    ComboBoxNode,
+    ComboBoxProps,
     FrameNode,
     FrameProps,
+    GroupBoxNode,
+    GroupBoxProps,
     LabelNode,
     LabelProps,
     LineEditNode,
     LineEditProps,
+    ListWidgetNode,
+    ListWidgetProps,
     Node,
+    ProgressBarNode,
+    ProgressBarProps,
+    RadioButtonNode,
+    RadioButtonProps,
+    ScrollAreaNode,
+    ScrollAreaProps,
+    SliderNode,
+    SliderProps,
+    SpinBoxNode,
+    SpinBoxProps,
+    TabWidgetNode,
+    TabWidgetProps,
+    TextEditNode,
+    TextEditProps,
     WindowNode,
     WindowProps,
 )
@@ -109,6 +129,86 @@ def create_node(
                 parent_id=parent_id,
                 layout=layout,
                 props=CheckboxProps(text=display),
+            )
+        case "combo_box":
+            return ComboBoxNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=layout,
+                props=ComboBoxProps(),
+            )
+        case "text_edit":
+            return TextEditNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 160), h=max(h, 80))),
+                props=TextEditProps(placeholder="Enter text…"),
+            )
+        case "radio_button":
+            return RadioButtonNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=layout,
+                props=RadioButtonProps(text=display),
+            )
+        case "spin_box":
+            return SpinBoxNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=layout,
+                props=SpinBoxProps(),
+            )
+        case "slider":
+            return SliderNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 160), h=28)),
+                props=SliderProps(),
+            )
+        case "list_widget":
+            return ListWidgetNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 120), h=max(h, 100))),
+                props=ListWidgetProps(),
+            )
+        case "group_box":
+            return GroupBoxNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 180), h=max(h, 120))),
+                props=GroupBoxProps(title=display),
+            )
+        case "tab_widget":
+            return TabWidgetNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 280), h=max(h, 200))),
+                props=TabWidgetProps(),
+            )
+        case "progress_bar":
+            return ProgressBarNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 160), h=24)),
+                props=ProgressBarProps(),
+            )
+        case "scroll_area":
+            return ScrollAreaNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 160), h=max(h, 100))),
+                props=ScrollAreaProps(),
             )
         case other:
             raise ValueError(f"unknown widget type: {other!r}")

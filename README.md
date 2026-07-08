@@ -3,16 +3,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 
-py_vui is a visual authoring environment for Python user interfaces. **Phase 1** delivers drag-and-drop layout, property editing, and clean PySide6 code generation. **Phase 2** (planned) adds pygame integration for a small-game / interactive-media workflow.
+py_vui is a visual authoring environment for Python user interfaces — a **pyUIBuilder-class** editor with 16 Qt widgets, themes, event handlers, and exportable PySide6 projects. A separate **pygame studio** track remains planned in the design docs.
 
 - **Repository:** [github.com/dfunani/py_vui](https://github.com/dfunani/py_vui)
-- **Design docs:** [DESIGN_SPEC](./docs/DESIGN_SPEC.md) · [IMPLEMENTATION_PLAN](./docs/IMPLEMENTATION_PLAN.md) · [IMPLEMENTATION](./docs/IMPLEMENTATION.md)
+- **Documentation:** [Design & implementation](./docs/design.md) · [Tutorial (rebuild from scratch)](./docs/tutorial.md)
 
 ## Install (end users)
 
 **Requirements:** Python **3.12+**, macOS, Windows, or Linux (desktop with Qt support).
 
-After the package is [published on PyPI](./docs/PUBLISHING.md) (maintainer steps below), anyone can run:
+After the package is [published on PyPI](./docs/tutorial.md#phase-8--release--publishing) (maintainer steps below), anyone can run:
 
 ```bash
 pip install "py-vui[gui]"
@@ -32,13 +32,15 @@ py_vui
 
 ## Using the editor
 
-1. **Save:** **File → Save Project As…** — pick a parent folder (e.g. `~/Documents`). The editor creates `<project-name>/` with `py_vui.json` and `session.meta.json`.
-2. **Save again:** **File → Save Project** (⌘S / Ctrl+S).
-3. **Open:** **File → Open Project Folder…** or **Open Recent**.
-4. **Design:** drag widgets from the palette, move on canvas, edit in the inspector.
-5. **Generate:** **Build → Generate Code** → writes `<project>/app/`.
-6. **Export:** **Build → Export Code** — choose a parent folder; export goes to `<parent>/<project-name>/`.
-7. **Run generated app:**
+1. **New:** **File → New** or **New from template** (dialog / settings).
+2. **Save:** **File → Save Project As…** — pick a parent folder (e.g. `~/Documents`). The editor creates `<project-name>/` with `py_vui.json` and `session.meta.json`.
+3. **Save again:** **File → Save Project** (⌘S / Ctrl+S).
+4. **Open:** **File → Open Project Folder…** or **Open Recent**.
+5. **Design:** palette + **widget tree**; move, **resize**, 8px snap; inspector for theme and handlers.
+6. **Edit:** Copy/Paste/Duplicate; multi-select; **Align** / **Distribute**; live **preview** dock after generate.
+7. **Generate:** **Build → Generate Code** → `<project>/app/` (`ui_generated.py`, `handlers.py`, `chrome.py`, …).
+8. **Export:** **Build → Export Code** → `<parent>/<project-name>/`.
+9. **Run generated app:**
 
    ```bash
    cd ~/Documents/my-ui/app
@@ -84,7 +86,7 @@ pytest -q
 
 ## Publishing for everyone (maintainers — your steps)
 
-Full checklist and troubleshooting: **[docs/PUBLISHING.md](./docs/PUBLISHING.md)**.
+Full checklist and troubleshooting: **[docs/tutorial.md — Phase 8](./docs/tutorial.md#phase-8--release--publishing)**.
 
 ### One-time setup
 
@@ -128,11 +130,12 @@ pip install "py-vui[gui]"
 py_vui
 ```
 
-## Phase 2 (interactive builder)
+## UI builder features
 
-Themes, per-widget styling, **button / field actions** (inline handler editor), and **drag resize** on the canvas. See [docs/PHASE2_UI.md](./docs/PHASE2_UI.md).
+16 widget types, themes, handlers, widget tree, snap grid, multi-select, align/distribute, copy/paste, tab order, menus, anchors, merge-safe codegen, live preview dock, and project templates.
 
-**Roadmap (v1 → v2 → vfinal):** [docs/ROADMAP.md](./docs/ROADMAP.md)
+- **Design & features:** [docs/design.md](./docs/design.md)
+- **Rebuild tutorial:** [docs/tutorial.md](./docs/tutorial.md)
 
 ## Goals
 
@@ -150,7 +153,7 @@ Themes, per-widget styling, **button / field actions** (inline handler editor), 
 
 ```
 py_vui/
-  docs/                 # design + PUBLISHING.md
+  docs/                 # design.md + tutorial.md
   examples/fixtures/
   src/py_vui/
     model/              # document schema + serde

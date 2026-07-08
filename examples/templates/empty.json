@@ -1,0 +1,20 @@
+{
+  "adapter": "pyside6",
+  "handlers": {},
+  "meta": { "name": "empty" },
+  "nodes": {
+    "c0000000-0000-4000-8000-000000000001": {
+      "id": "c0000000-0000-4000-8000-000000000001",
+      "layout": { "box": { "h": 480, "w": 640, "x": 0, "y": 0 } },
+      "name": "MainWindow",
+      "parentId": null,
+      "props": { "height": 480, "title": "Window", "width": 640 },
+      "type": "window",
+      "zIndex": 0
+    }
+  },
+  "rootId": "c0000000-0000-4000-8000-000000000001",
+  "schemaVersion": "1",
+  "tabOrder": [],
+  "theme": { "preset": "modern" }
+}

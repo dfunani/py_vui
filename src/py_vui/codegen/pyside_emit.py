@@ -3,24 +3,29 @@ from __future__ import annotations
 import re
 import sys
 import textwrap
+from pathlib import Path
 
+from py_vui.codegen.merge_regions import merge_function_body, wrap_custom_block
+from py_vui.codegen.node_emit import extra_imports, props_lines, widget_ctor
 from py_vui.codegen.types import WrittenFile
 from py_vui.model.document import ProjectDocument
 from py_vui.model.interaction import HandlerDef
 from py_vui.model.nodes import (
     ButtonNode,
     CheckboxNode,
-    FrameNode,
-    LabelNode,
+    ComboBoxNode,
     LineEditNode,
+    ListWidgetNode,
     Node,
+    RadioButtonNode,
+    SliderNode,
+    SpinBoxNode,
+    TabWidgetNode,
+    TextEditNode,
     WindowNode,
 )
 from py_vui.model.project import py_vuiProject
-from py_vui.model.theme import (
-    application_stylesheet,
-    stylesheet_for_node,
-)
+from py_vui.model.theme import application_stylesheet
 
 _MIN_PYTHON = f"{sys.version_info.major}.{sys.version_info.minor}"
 
@@ -31,50 +36,6 @@ def _py_ident(node_id: str) -> str:
 
 def _widget_key(name: str) -> str:
     return re.sub(r"[^0-9a-zA-Z_]+", "_", name.strip()) or "widget"
-
-
-def _emit_widget_ctor(node: Node) -> tuple[str, str]:
-    if isinstance(node, WindowNode):
-        return ("QWidget", "QWidget()")
-    if isinstance(node, FrameNode):
-        return ("QFrame", "QFrame()")
-    if isinstance(node, LabelNode):
-        return ("QLabel", "QLabel()")
-    if isinstance(node, ButtonNode):
-        return ("QPushButton", "QPushButton()")
-    if isinstance(node, LineEditNode):
-        return ("QLineEdit", "QLineEdit()")
-    if isinstance(node, CheckboxNode):
-        return ("QCheckBox", "QCheckBox()")
-    msg = f"unsupported node type for Phase 1 PySide6 emit: {node.type!r}"
-    raise ValueError(msg)
-
-
-def _emit_props_lines(project: py_vuiProject, node: Node, var: str) -> list[str]:
-    theme = project.theme
-    lines: list[str] = []
-    b = node.layout.box
-    lines.append(f"{var}.setGeometry(int({b.x}), int({b.y}), int({b.w}), int({b.h}))")
-    if not node.enabled:
-        lines.append(f"{var}.setEnabled(False)")
-    qss = stylesheet_for_node(theme=theme, node_type=node.type, style=node.style)
-    if qss:
-        lines.append(f"{var}.setStyleSheet({qss!r})")
-    if isinstance(node, WindowNode):
-        p = node.props
-        lines.append(f"{var}.setWindowTitle({p.title!r})")
-        lines.append(f"{var}.resize(int({p.width}), int({p.height}))")
-    elif isinstance(node, LabelNode):
-        lines.append(f"{var}.setText({node.props.text!r})")
-    elif isinstance(node, ButtonNode):
-        lines.append(f"{var}.setText({node.props.text!r})")
-    elif isinstance(node, LineEditNode):
-        lines.append(f"{var}.setText({node.props.text!r})")
-        lines.append(f"{var}.setPlaceholderText({node.props.placeholder!r})")
-    elif isinstance(node, CheckboxNode):
-        lines.append(f"{var}.setText({node.props.text!r})")
-        lines.append(f"{var}.setChecked({str(node.props.checked)})")
-    return lines
 
 
 def _emit_ui_module(project: py_vuiProject) -> str:
@@ -91,27 +52,46 @@ def _emit_ui_module(project: py_vuiProject) -> str:
     imports: set[str] = set()
     body: list[str] = []
     widget_entries: list[str] = []
+    tab_pages: dict[str, list[str]] = {}
+    needs_qt = False
+
     for nid in order:
         node = project.nodes[nid]
-        imp, ctor = _emit_widget_ctor(node)
+        imp, ctor = widget_ctor(node)
         imports.add(imp)
         var = _py_ident(nid)
         body.append(f"{var} = {ctor}")
         widget_entries.append(f'    "{_widget_key(node.name)}": {var},')
+        if isinstance(node, TabWidgetNode):
+            pages: list[str] = []
+            for i, tab in enumerate(node.props.tabs):
+                page_var = f"{var}_page{i}"
+                body.append(f"{page_var} = QWidget()")
+                body.append(f'{var}.addTab({page_var}, {tab.title!r})')
+                pages.append(page_var)
+            tab_pages[nid] = pages
+        if isinstance(node, SliderNode):
+            needs_qt = True
 
     for nid in order:
         node = project.nodes[nid]
         var = _py_ident(nid)
         if nid != project.root_id and node.parent_id is not None:
             parent = project.nodes[node.parent_id]
-            pvar = _py_ident(parent.id)
-            body.append(f"{var}.setParent({pvar})")
-        body.extend(_emit_props_lines(project, node, var))
+            if isinstance(parent, TabWidgetNode):
+                pages = tab_pages[parent.id]
+                idx = min(node.tab_index or 0, len(pages) - 1)
+                body.append(f"{var}.setParent({pages[idx]})")
+            else:
+                pvar = _py_ident(parent.id)
+                body.append(f"{var}.setParent({pvar})")
+        body.extend(props_lines(project, node, var))
 
     root_var = _py_ident(project.root_id)
     body.append("WIDGETS = {")
     body.extend(widget_entries)
     body.append("}")
+    body.extend(_emit_chrome_setup(project, root_var))
     body.append(f"return {root_var}")
 
     ui_lines: list[str] = [
@@ -123,47 +103,157 @@ def _emit_ui_module(project: py_vuiProject) -> str:
         "    global WIDGETS",
         "    from PySide6.QtWidgets import (",
     ]
-    for name in sorted(imports):
+    for name in sorted(imports | extra_imports(project)):
         ui_lines.append(f"        {name},")
     ui_lines.append("    )")
+    if needs_qt:
+        ui_lines.append("    from PySide6.QtCore import Qt")
     ui_lines.append("")
     for ln in body:
         ui_lines.append(f"    {ln}")
     return "\n".join(ui_lines) + "\n"
 
 
-def _indent_body(body: str) -> str:
-    lines = body.strip().splitlines() or ["pass"]
-    return "\n".join("    " + ln if ln.strip() else "    pass" for ln in lines)
+def _emit_chrome_setup(project: py_vuiProject, root_var: str) -> list[str]:
+    root = project.nodes[project.root_id]
+    needs = (
+        (isinstance(root, WindowNode) and root.props.menus)
+        or bool(project.tab_order)
+        or any(
+            n.layout.anchors.right or n.layout.anchors.bottom
+            for nid, n in project.nodes.items()
+            if nid != project.root_id
+        )
+    )
+    if not needs:
+        return []
+    lines = ["from chrome import _setup_menus, _setup_tab_order, _register_anchored_children, apply_anchors"]
+    if isinstance(root, WindowNode) and root.props.menus:
+        lines.append(f"_setup_menus({root_var})")
+    if project.tab_order:
+        lines.append("_setup_tab_order()")
+    if any(
+        n.layout.anchors.right or n.layout.anchors.bottom
+        for nid, n in project.nodes.items()
+        if nid != project.root_id
+    ):
+        lines.append("_register_anchored_children()")
+        lines.append(f"apply_anchors(int({root_var}.width()), int({root_var}.height()))")
+    return lines
 
 
-def _emit_handlers_module(handlers: dict[str, HandlerDef]) -> str:
+def _emit_chrome_module(project: py_vuiProject) -> str:
     lines = [
-        '"""Event handlers generated by py_vui — edit the function bodies."""',
+        '"""Menus, tab order, and anchor helpers generated by py_vui."""',
+        "from __future__ import annotations",
+        "",
+        "from PySide6.QtWidgets import QMenu, QMenuBar, QWidget",
+        "",
+        "",
+    ]
+    root = project.nodes[project.root_id]
+    if isinstance(root, WindowNode) and root.props.menus:
+        lines.append("def _setup_menus(root) -> None:")
+        lines.append("    bar = QMenuBar(root)")
+        lines.append("    root.setMenuBar(bar)")
+        for menu in root.props.menus:
+            lines.append(f"    m = bar.addMenu({menu.title!r})")
+            for item in menu.items:
+                if item.separator:
+                    lines.append("    m.addSeparator()")
+                    continue
+                if item.handler:
+                    lines.append(f"    act = m.addAction({item.label!r})")
+                    lines.append(
+                        f"    act.triggered.connect("
+                        f"__import__('handlers').{item.handler})"
+                    )
+                else:
+                    lines.append(f"    m.addAction({item.label!r})")
+        lines.append("")
+
+    if project.tab_order:
+        lines.append("def _setup_tab_order() -> None:")
+        lines.append("    from ui_generated import WIDGETS")
+        lines.append("    widgets = []")
+        for nid in project.tab_order:
+            key = _widget_key(project.nodes[nid].name)
+            lines.append(f"    if {key!r} in WIDGETS:")
+            lines.append(f"        widgets.append(WIDGETS[{key!r}])")
+        lines.append("    for i in range(len(widgets) - 1):")
+        lines.append("        QWidget.setTabOrder(widgets[i], widgets[i + 1])")
+        lines.append("")
+
+    lines.append("_ANCHORED: list[tuple[object, dict]] = []")
+    lines.append("")
+    lines.append("def _register_anchored_children() -> None:")
+    lines.append("    from ui_generated import WIDGETS")
+    for nid, node in project.nodes.items():
+        if nid == project.root_id:
+            continue
+        a = node.layout.anchors
+        if not (a.right or a.bottom):
+            continue
+        key = _widget_key(node.name)
+        m = node.layout.margins
+        lines.append(
+            f"    _ANCHORED.append((WIDGETS[{key!r}], "
+            f"{{'right': {a.right!s}, 'bottom': {a.bottom!s}, "
+            f"'margin': ({m.left}, {m.top}, {m.right}, {m.bottom})}}))"
+        )
+    lines.append("")
+    lines.append("def apply_anchors(root_width: int, root_height: int) -> None:")
+    lines.append("    if not _ANCHORED:")
+    lines.append("        return")
+    lines.append("    for widget, spec in _ANCHORED:")
+    lines.append("        g = widget.geometry()")
+    lines.append("        x, y, w, h = g.x(), g.y(), g.width(), g.height()")
+    lines.append("        ml, mt, mr, mb = spec['margin']")
+    lines.append("        if spec['right']:")
+    lines.append("            x = int(root_width - w - mr)")
+    lines.append("        if spec['bottom']:")
+    lines.append("            y = int(root_height - h - mb)")
+    lines.append("        widget.setGeometry(x, y, w, h)")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def _emit_handlers_module(
+    handlers: dict[str, HandlerDef],
+    *,
+    existing_path: Path | None = None,
+) -> str:
+    existing = existing_path.read_text(encoding="utf-8") if existing_path and existing_path.is_file() else None
+    lines = [
+        '"""Event handlers generated by py_vui — edit bodies inside custom regions."""',
         "from __future__ import annotations",
         "",
     ]
     if not handlers:
-        lines.append("# No handlers yet. Assign actions to buttons in the editor.")
-        lines.append("")
+        lines.append(wrap_custom_block("# Add handler functions here."))
         return "\n".join(lines) + "\n"
 
     for handler in handlers.values():
-        lines.append(f"def {handler.name}() -> None:")
-        lines.append(_indent_body(handler.body))
-        lines.append("")
-    return "\n".join(lines)
+        lines.append(
+            merge_function_body(existing, handler.name, handler.body, default_body="pass")
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _emit_custom_module() -> str:
+    return textwrap.dedent(
+        '''\
+        """User extensions — py_vui never overwrites this file."""
+        from __future__ import annotations
+
+        # py_vui: begin custom
+        # Add shared imports and helper functions here.
+        # py_vui: end custom
+        '''
+    )
 
 
 def _emit_interactions_module(project: py_vuiProject) -> str:
-    lines = [
-        '"""Signal wiring generated by py_vui."""',
-        "from __future__ import annotations",
-        "",
-        "from PySide6.QtWidgets import QLineEdit",
-        "",
-        "from handlers import (",
-    ]
     handler_names: set[str] = set()
     wires: list[str] = []
 
@@ -175,28 +265,53 @@ def _emit_interactions_module(project: py_vuiProject) -> str:
             wires.append(f"    {var}.clicked.connect({node.props.on_click})")
         elif isinstance(node, LineEditNode) and node.props.on_return:
             handler_names.add(node.props.on_return)
-            wires.append(
-                f"    {var}.returnPressed.connect({node.props.on_return})"
-            )
+            wires.append(f"    {var}.returnPressed.connect({node.props.on_return})")
         elif isinstance(node, CheckboxNode) and node.props.on_toggle:
             handler_names.add(node.props.on_toggle)
             wires.append(f"    {var}.toggled.connect({node.props.on_toggle})")
+        elif isinstance(node, TextEditNode) and node.props.on_change:
+            handler_names.add(node.props.on_change)
+            wires.append(f"    {var}.textChanged.connect({node.props.on_change})")
+        elif isinstance(node, RadioButtonNode) and node.props.on_toggle:
+            handler_names.add(node.props.on_toggle)
+            wires.append(f"    {var}.toggled.connect({node.props.on_toggle})")
+        elif isinstance(node, SpinBoxNode) and node.props.on_change:
+            handler_names.add(node.props.on_change)
+            wires.append(f"    {var}.valueChanged.connect({node.props.on_change})")
+        elif isinstance(node, SliderNode) and node.props.on_change:
+            handler_names.add(node.props.on_change)
+            wires.append(f"    {var}.valueChanged.connect({node.props.on_change})")
+        elif isinstance(node, ListWidgetNode) and node.props.on_select:
+            handler_names.add(node.props.on_select)
+            wires.append(f"    {var}.itemSelectionChanged.connect({node.props.on_select})")
+        elif isinstance(node, ComboBoxNode) and node.props.on_change:
+            handler_names.add(node.props.on_change)
+            wires.append(f"    {var}.currentIndexChanged.connect({node.props.on_change})")
 
+    lines = [
+        '"""Signal wiring generated by py_vui."""',
+        "from __future__ import annotations",
+        "",
+        "from handlers import (",
+    ]
     if handler_names:
         for name in sorted(handler_names):
             lines.append(f"    {name},")
     else:
         lines.append("    # no handlers")
-    lines.append(")")
-    lines.append("from ui_generated import WIDGETS")
-    lines.append("")
-    lines.append("")
-    lines.append("def wire_handlers() -> None:")
+    lines.extend(
+        [
+            ")",
+            "from ui_generated import WIDGETS",
+            "",
+            "",
+            "def wire_handlers() -> None:",
+        ]
+    )
     if not wires:
         lines.append("    return")
     else:
-        for wire in wires:
-            lines.append(wire)
+        lines.extend(wires)
     lines.append("")
     return "\n".join(lines)
 
@@ -228,16 +343,13 @@ def _emit_theme_module(project: py_vuiProject) -> str:
     )
 
 
-def _emit_main_module(project_name: str, *, has_handlers: bool) -> str:
-    wire_lines = (
-        [
-            "    from interactions import wire_handlers",
-            "    wire_handlers()",
-        ]
+def _emit_main_module(project: py_vuiProject, *, has_handlers: bool) -> str:
+    name = project.meta.name
+    handler_block = (
+        "    from interactions import wire_handlers\n    wire_handlers()\n"
         if has_handlers
-        else []
+        else ""
     )
-    wire_block = "\n".join(wire_lines) + ("\n" if wire_lines else "")
     return textwrap.dedent(
         f"""\
         #!/usr/bin/env python3
@@ -258,11 +370,7 @@ def _emit_main_module(project_name: str, *, has_handlers: bool) -> str:
             except ModuleNotFoundError as exc:
                 print("PySide6 is not installed for this Python interpreter.")
                 print(f"  Python: {{sys.executable}}")
-                print()
-                print("Install dependencies, then run again:")
-                print(f"  cd {{APP_DIR}}")
-                print("  pip install -r requirements.txt")
-                print("  python main.py")
+                print("  pip install -r requirements.txt && python main.py")
                 raise SystemExit(1) from exc
 
 
@@ -274,10 +382,10 @@ def _emit_main_module(project_name: str, *, has_handlers: bool) -> str:
             from ui_generated import build_ui
 
             app = QApplication(sys.argv)
-            app.setApplicationName({project_name!r})
+            app.setApplicationName({name!r})
             apply_theme(app)
             root = build_ui()
-        {wire_block}    root.show()
+        {handler_block}    root.show()
             return int(app.exec())
 
 
@@ -296,28 +404,24 @@ def _emit_readme(project_name: str) -> str:
         f"""\
         # {project_name}
 
-        Desktop app generated by [py_vui](https://github.com/dfunani/py_vui).
-
-        ## Requirements
-
-        - Python {_MIN_PYTHON}+
-        - PySide6
+        Generated by [py_vui](https://github.com/dfunani/py_vui).
 
         ## Run
 
         ```bash
-        cd "$(dirname "$0")"
-        python3 -m venv .venv
-        source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
         pip install -r requirements.txt
         python main.py
         ```
 
-        ## Customize
+        ## Customize (safe to edit)
 
-        - **Theme:** edit `theme.py` or re-export from py_vui with a different preset.
-        - **Handlers:** edit function bodies in `handlers.py` (wired in `interactions.py`).
-        - **Layout:** regenerate from py_vui; hand-edits in `ui_generated.py` may be overwritten.
+        - `handlers.py` — code inside `# py_vui: begin custom` regions is preserved on regen.
+        - `custom.py` — never overwritten.
+        - `theme.py` — colors and fonts.
+
+        ## Regenerated on export
+
+        - `ui_generated.py`, `interactions.py`, `chrome.py`
         """
     )
 
@@ -330,26 +434,43 @@ def _project_has_handlers(project: py_vuiProject) -> bool:
             return True
         if isinstance(node, CheckboxNode) and node.props.on_toggle:
             return True
+        if isinstance(node, TextEditNode) and node.props.on_change:
+            return True
+        if isinstance(node, RadioButtonNode) and node.props.on_toggle:
+            return True
+        if isinstance(node, SpinBoxNode) and node.props.on_change:
+            return True
+        if isinstance(node, SliderNode) and node.props.on_change:
+            return True
+        if isinstance(node, ListWidgetNode) and node.props.on_select:
+            return True
+        if isinstance(node, ComboBoxNode) and node.props.on_change:
+            return True
     return False
 
 
-def emit_pyside_phase1(project: py_vuiProject) -> list[WrittenFile]:
+def emit_pyside_phase1(
+    project: py_vuiProject,
+    *,
+    handlers_path: Path | None = None,
+) -> list[WrittenFile]:
     if project.adapter != "pyside6":
         msg = f"unsupported adapter {project.adapter!r}"
         raise ValueError(msg)
 
     name = project.meta.name
     has_handlers = _project_has_handlers(project)
-    files = [
+    return [
         WrittenFile("ui_generated.py", _emit_ui_module(project)),
+        WrittenFile("chrome.py", _emit_chrome_module(project)),
         WrittenFile("theme.py", _emit_theme_module(project)),
-        WrittenFile("handlers.py", _emit_handlers_module(project.handlers)),
-        WrittenFile("interactions.py", _emit_interactions_module(project)),
         WrittenFile(
-            "main.py",
-            _emit_main_module(name, has_handlers=has_handlers),
+            "handlers.py",
+            _emit_handlers_module(project.handlers, existing_path=handlers_path),
         ),
+        WrittenFile("custom.py", _emit_custom_module()),
+        WrittenFile("interactions.py", _emit_interactions_module(project)),
+        WrittenFile("main.py", _emit_main_module(project, has_handlers=has_handlers)),
         WrittenFile("requirements.txt", _emit_requirements()),
         WrittenFile("README.md", _emit_readme(name)),
     ]
-    return files

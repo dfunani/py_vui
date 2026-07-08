@@ -9,7 +9,7 @@ from py_vui.model.nodes import Node
 from py_vui.model.project import py_vuiProject
 
 
-def _collect_subtree_ids(doc: ProjectDocument, root_id: str) -> list[str]:
+def collect_subtree_ids(doc: ProjectDocument, root_id: str) -> list[str]:
     out: list[str] = []
     stack = [root_id]
     while stack:
@@ -54,7 +54,7 @@ class RemoveSubtree(Command):
         if self.root_id not in doc.project.nodes:
             msg = f"missing node {self.root_id!r}"
             raise ValueError(msg)
-        ids = _collect_subtree_ids(doc, self.root_id)
+        ids = collect_subtree_ids(doc, self.root_id)
         self._removed = {i: doc.project.nodes[i] for i in ids}
         _remove_ids(doc.project, set(ids))
 
@@ -144,12 +144,8 @@ class ReplaceNode(Command):
         if self.before.id != self.after.id:
             msg = "ReplaceNode requires matching ids"
             raise ValueError(msg)
-        current = doc.project.nodes.get(self.before.id)
-        if current is None:
-            msg = f"missing node {self.before.id!r}"
-            raise ValueError(msg)
-        if current.model_dump(mode="json") != self.before.model_dump(mode="json"):
-            msg = "document node does not match `before` snapshot"
+        if self.after.id not in doc.project.nodes:
+            msg = f"missing node {self.after.id!r}"
             raise ValueError(msg)
         doc.project.nodes[self.after.id] = self.after
 

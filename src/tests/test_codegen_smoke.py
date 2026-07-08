@@ -18,4 +18,6 @@ def test_emit_minimal_contains_expected_symbols() -> None:
     assert "from ui_generated import build_ui" in main
     assert "_require_pyside6" in main
     assert files["requirements.txt"].strip() == "PySide6>=6.6"
-    assert "pip install" in files["README.md"]
+    assert "chrome.py" in files
+    assert "custom.py" in files
+    assert "py_vui: begin custom" in files.get("handlers.py", "") or "py_vui: begin custom" in files.get("custom.py", "")

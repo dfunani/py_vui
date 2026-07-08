@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QTimer, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -23,11 +23,14 @@ from py_vui.model.interaction import HandlerDef, default_handler_name
 from py_vui.model.nodes import (
     ButtonNode,
     CheckboxNode,
+    ComboBoxNode,
     LabelNode,
     LineEditNode,
     Node,
+    TextEditNode,
     WindowNode,
 )
+from py_vui.app.editor.handler_snippets import HANDLER_SNIPPETS
 from py_vui.model.theme import WidgetStyle, theme_for_preset
 
 if TYPE_CHECKING:
@@ -45,6 +48,10 @@ class PropertyInspector(QWidget):
         self._history: History | None = None
         self._node_id: str | None = None
         self._block = False
+        self._apply_timer = QTimer(self)
+        self._apply_timer.setSingleShot(True)
+        self._apply_timer.setInterval(250)
+        self._apply_timer.timeout.connect(self._apply)
 
         layout = QVBoxLayout(self)
 
@@ -76,7 +83,10 @@ class PropertyInspector(QWidget):
         self._h.setRange(1, 9999)
         for spin in (self._x, self._y, self._w, self._h):
             spin.editingFinished.connect(self._apply)
+        self._tooltip = QLineEdit()
+        self._tooltip.editingFinished.connect(self._apply)
         cf.addRow("Widget name", self._name)
+        cf.addRow("Tooltip", self._tooltip)
         cf.addRow("", self._enabled)
         cf.addRow("X", self._x)
         cf.addRow("Y", self._y)
@@ -95,6 +105,10 @@ class PropertyInspector(QWidget):
         prop_form.addRow("Text / title", self._text)
         prop_form.addRow("Placeholder", self._placeholder)
         prop_form.addRow("Checked", self._checked)
+        self._combo_items = QLineEdit()
+        self._combo_items.setPlaceholderText("Option 1, Option 2, …")
+        self._combo_items.editingFinished.connect(self._apply)
+        prop_form.addRow("Combo items", self._combo_items)
         layout.addWidget(props)
 
         appearance = QGroupBox("Appearance")
@@ -102,17 +116,19 @@ class PropertyInspector(QWidget):
         self._bg = QLineEdit()
         self._bg.setPlaceholderText("e.g. #2563eb (empty = theme)")
         self._bg.editingFinished.connect(self._apply)
+        self._bg.textChanged.connect(self._schedule_apply)
         self._fg = QLineEdit()
         self._fg.setPlaceholderText("text color")
         self._fg.editingFinished.connect(self._apply)
+        self._fg.textChanged.connect(self._schedule_apply)
         self._font_size = QSpinBox()
         self._font_size.setRange(0, 48)
         self._font_size.setSpecialValueText("theme")
-        self._font_size.editingFinished.connect(self._apply)
+        self._font_size.valueChanged.connect(self._schedule_apply)
         self._radius = QSpinBox()
         self._radius.setRange(0, 32)
         self._radius.setSpecialValueText("theme")
-        self._radius.editingFinished.connect(self._apply)
+        self._radius.valueChanged.connect(self._schedule_apply)
         af.addRow("Background", self._bg)
         af.addRow("Foreground", self._fg)
         af.addRow("Font size", self._font_size)
@@ -131,6 +147,12 @@ class PropertyInspector(QWidget):
         handler_row.addWidget(self._new_handler_btn)
         interaction_layout.addWidget(QLabel("Handler function:"))
         interaction_layout.addLayout(handler_row)
+        self._snippet = QComboBox()
+        self._snippet.addItem("Insert snippet…", "")
+        for title in HANDLER_SNIPPETS:
+            self._snippet.addItem(title, title)
+        self._snippet.currentIndexChanged.connect(self._insert_snippet)
+        interaction_layout.addWidget(self._snippet)
         self._handler_body = QPlainTextEdit()
         self._handler_body.setPlaceholderText(
             'Python statements, e.g.\nprint("Hello!")\n'
@@ -217,6 +239,17 @@ class PropertyInspector(QWidget):
         self._load_handler_body(name)
         self._apply_handler_binding()
 
+    def _insert_snippet(self) -> None:
+        if self._block:
+            return
+        title = self._snippet.currentData()
+        if not title:
+            return
+        body = HANDLER_SNIPPETS.get(str(title), "")
+        if body:
+            self._handler_body.setPlainText(body)
+        self._snippet.setCurrentIndex(0)
+
     def _create_handler_from_widget(self) -> None:
         if self._block or self._doc is None or not self._node_id:
             return
@@ -256,6 +289,8 @@ class PropertyInspector(QWidget):
             data["props"]["onReturn"] = handler
         elif isinstance(node, CheckboxNode):
             data["props"]["onToggle"] = handler
+        elif isinstance(node, TextEditNode):
+            data["props"]["onChange"] = handler
         else:
             return
         after = node.__class__.model_validate(data)
@@ -287,6 +322,9 @@ class PropertyInspector(QWidget):
             display_h = int(box.h)
 
         self._block = True
+        self._tooltip.blockSignals(True)
+        self._tooltip.setText(node.tooltip)
+        self._tooltip.blockSignals(False)
         for widget, value in (
             (self._name, node.name),
             (self._x, int(box.x)),
@@ -306,11 +344,26 @@ class PropertyInspector(QWidget):
         self._enabled.blockSignals(False)
 
         self._text.setVisible(
-            isinstance(node, (WindowNode, LabelNode, ButtonNode, LineEditNode, CheckboxNode))
+            isinstance(
+                node,
+                (
+                    WindowNode,
+                    LabelNode,
+                    ButtonNode,
+                    LineEditNode,
+                    CheckboxNode,
+                    TextEditNode,
+                ),
+            )
         )
-        self._placeholder.setVisible(isinstance(node, LineEditNode))
+        self._placeholder.setVisible(
+            isinstance(node, (LineEditNode, TextEditNode))
+        )
         self._checked.setVisible(isinstance(node, CheckboxNode))
-        has_action = isinstance(node, (ButtonNode, LineEditNode, CheckboxNode))
+        self._combo_items.setVisible(isinstance(node, ComboBoxNode))
+        has_action = isinstance(
+            node, (ButtonNode, LineEditNode, CheckboxNode, TextEditNode)
+        )
         self._interaction_group.setVisible(has_action)
         for w in (
             self._handler_name,
@@ -323,6 +376,7 @@ class PropertyInspector(QWidget):
         self._text.blockSignals(True)
         self._placeholder.blockSignals(True)
         self._checked.blockSignals(True)
+        self._combo_items.blockSignals(True)
         if isinstance(node, WindowNode):
             self._text.setText(node.props.title)
         elif isinstance(node, LabelNode):
@@ -335,11 +389,17 @@ class PropertyInspector(QWidget):
         elif isinstance(node, CheckboxNode):
             self._text.setText(node.props.text)
             self._checked.setChecked(node.props.checked)
+        elif isinstance(node, TextEditNode):
+            self._text.setText(node.props.text)
+            self._placeholder.setText(node.props.placeholder)
+        elif isinstance(node, ComboBoxNode):
+            self._combo_items.setText(", ".join(node.props.items))
         else:
             self._text.clear()
         self._text.blockSignals(False)
         self._placeholder.blockSignals(False)
         self._checked.blockSignals(False)
+        self._combo_items.blockSignals(False)
 
         style = node.style or WidgetStyle()
         self._bg.blockSignals(True)
@@ -362,24 +422,39 @@ class PropertyInspector(QWidget):
             handler = node.props.on_return
         elif isinstance(node, CheckboxNode):
             handler = node.props.on_toggle
+        elif isinstance(node, TextEditNode):
+            handler = node.props.on_change
         self._refresh_handler_list(select=handler or "")
         self._load_handler_body(handler)
 
         self._block = False
+
+    def _schedule_apply(self) -> None:
+        if self._block:
+            return
+        self._apply_timer.start()
 
     def _apply(self) -> None:
         if self._block or not self._node_id or self._doc is None or self._history is None:
             return
         before = self._doc.get_node(self._node_id)
         after = self._clone_with_edits(before)
-        if after.model_dump() == before.model_dump():
+        if after.model_dump(mode="json") == before.model_dump(mode="json"):
             return
         self._history.push(self._doc, ReplaceNode(before=before, after=after))
         self.document_changed.emit()
 
+    def _normalize_color(self, value: str) -> str | None:
+        raw = value.strip()
+        if not raw:
+            return None
+        if not raw.startswith("#"):
+            raw = f"#{raw}"
+        return raw
+
     def _parse_style(self) -> WidgetStyle | None:
-        bg = self._bg.text().strip() or None
-        fg = self._fg.text().strip() or None
+        bg = self._normalize_color(self._bg.text())
+        fg = self._normalize_color(self._fg.text())
         fs = self._font_size.value()
         radius = self._radius.value()
         if not any((bg, fg, fs, radius)):
@@ -394,6 +469,7 @@ class PropertyInspector(QWidget):
     def _clone_with_edits(self, node: Node) -> Node:
         data = node.model_dump()
         data["name"] = self._name.text()
+        data["tooltip"] = self._tooltip.text()
         data["enabled"] = self._enabled.isChecked()
         data["style"] = self._parse_style()
         data["layout"]["box"]["x"] = float(self._x.value())
@@ -411,9 +487,12 @@ class PropertyInspector(QWidget):
             data["layout"]["box"]["h"] = h
         elif isinstance(node, (LabelNode, ButtonNode, LineEditNode, CheckboxNode)):
             data["props"]["text"] = self._text.text()
-        if isinstance(node, LineEditNode):
-            data["props"]["placeholder"] = self._placeholder.text()
         if isinstance(node, CheckboxNode):
             data["props"]["checked"] = self._checked.isChecked()
+        if isinstance(node, (LineEditNode, TextEditNode)):
+            data["props"]["placeholder"] = self._placeholder.text()
+        if isinstance(node, ComboBoxNode):
+            raw = [p.strip() for p in self._combo_items.text().split(",") if p.strip()]
+            data["props"]["items"] = raw or ["Option 1"]
 
         return node.__class__.model_validate(data)

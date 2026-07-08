@@ -1,0 +1,75 @@
+{
+  "adapter": "pyside6",
+  "handlers": {},
+  "meta": { "name": "settings-template" },
+  "nodes": {
+    "b0000000-0000-4000-8000-000000000001": {
+      "id": "b0000000-0000-4000-8000-000000000001",
+      "layout": { "box": { "h": 400, "w": 480, "x": 0, "y": 0 } },
+      "name": "Settings",
+      "parentId": null,
+      "props": { "height": 400, "title": "Settings", "width": 480 },
+      "type": "window",
+      "zIndex": 0
+    },
+    "b0000000-0000-4000-8000-000000000002": {
+      "id": "b0000000-0000-4000-8000-000000000002",
+      "layout": { "box": { "h": 360, "w": 456, "x": 12, "y": 12 } },
+      "name": "Tabs",
+      "parentId": "b0000000-0000-4000-8000-000000000001",
+      "props": {
+        "currentIndex": 0,
+        "tabs": [{ "title": "General" }, { "title": "Advanced" }]
+      },
+      "type": "tab_widget",
+      "zIndex": 0
+    },
+    "b0000000-0000-4000-8000-000000000003": {
+      "id": "b0000000-0000-4000-8000-000000000003",
+      "layout": { "box": { "h": 24, "w": 120, "x": 16, "y": 16 } },
+      "name": "ThemeLabel",
+      "parentId": "b0000000-0000-4000-8000-000000000002",
+      "props": { "text": "Theme" },
+      "tabIndex": 0,
+      "type": "label",
+      "zIndex": 0
+    },
+    "b0000000-0000-4000-8000-000000000004": {
+      "id": "b0000000-0000-4000-8000-000000000004",
+      "layout": { "box": { "h": 28, "w": 160, "x": 16, "y": 48 } },
+      "name": "ThemeCombo",
+      "parentId": "b0000000-0000-4000-8000-000000000002",
+      "props": { "currentIndex": 0, "items": ["Light", "Dark", "Modern"] },
+      "tabIndex": 0,
+      "type": "combo_box",
+      "zIndex": 1
+    },
+    "b0000000-0000-4000-8000-000000000005": {
+      "id": "b0000000-0000-4000-8000-000000000005",
+      "layout": { "box": { "h": 120, "w": 200, "x": 16, "y": 16 } },
+      "name": "OptionsList",
+      "parentId": "b0000000-0000-4000-8000-000000000002",
+      "props": { "items": ["Verbose logging", "Auto-save", "Notifications"] },
+      "tabIndex": 1,
+      "type": "list_widget",
+      "zIndex": 0
+    },
+    "b0000000-0000-4000-8000-000000000006": {
+      "id": "b0000000-0000-4000-8000-000000000006",
+      "layout": { "box": { "h": 32, "w": 100, "x": 340, "y": 320 } },
+      "name": "Save",
+      "parentId": "b0000000-0000-4000-8000-000000000001",
+      "props": { "text": "Save" },
+      "type": "button",
+      "zIndex": 1
+    }
+  },
+  "rootId": "b0000000-0000-4000-8000-000000000001",
+  "schemaVersion": "1",
+  "tabOrder": [
+    "b0000000-0000-4000-8000-000000000004",
+    "b0000000-0000-4000-8000-000000000005",
+    "b0000000-0000-4000-8000-000000000006"
+  ],
+  "theme": { "preset": "modern" }
+}
