@@ -2,15 +2,10 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from py_vui import __version__
-from py_vui.codegen import emit_pyside_phase1
-from py_vui.model.document import ProjectDocument
-from py_vui.model.project import py_vuiProject
-from py_vui.model.serde import dump_json, load_json_bytes
-
 from py_vui.app.editor.session_paths import (
     APP_SUBDIR,
     AUTOSAVE_DOCUMENT,
@@ -21,6 +16,9 @@ from py_vui.app.editor.session_paths import (
     resolve_project_dir,
     write_session_meta,
 )
+from py_vui.codegen import emit_pyside_phase1
+from py_vui.model.document import ProjectDocument
+from py_vui.model.serde import dump_json, load_json_bytes
 
 
 @dataclass
@@ -60,7 +58,7 @@ class ProjectService:
 
     def mark_dirty(self) -> None:
         self.dirty = True
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         self.doc.project.meta.updated_at = now
 
     def save(self, *, parent_dir: Path | None = None) -> Path:
@@ -161,9 +159,7 @@ class ProjectService:
             meta_path = self.project_dir / SESSION_META
             if meta_path.is_file():
                 meta = json.loads(meta_path.read_text(encoding="utf-8"))
-                meta["last_export_at"] = datetime.now(timezone.utc).isoformat()
+                meta["last_export_at"] = datetime.now(UTC).isoformat()
                 meta["last_export_dir"] = str(root)
-                meta_path.write_text(
-                    json.dumps(meta, indent=2) + "\n", encoding="utf-8"
-                )
+                meta_path.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
         return written

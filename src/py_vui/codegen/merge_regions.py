@@ -56,9 +56,4 @@ def merge_function_body(
         preserved = extract_custom_block(existing_source, function_name=function_name)
     body = preserved if preserved else new_body.strip() or default_body
     indented = "\n".join("    " + ln if ln.strip() else "    pass" for ln in body.splitlines())
-    return (
-        f"def {function_name}() -> None:\n"
-        f"    {BEGIN}\n"
-        f"{indented}\n"
-        f"    {END}\n"
-    )
+    return f"def {function_name}() -> None:\n    {BEGIN}\n{indented}\n    {END}\n"

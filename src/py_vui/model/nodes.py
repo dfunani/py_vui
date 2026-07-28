@@ -194,7 +194,9 @@ class TabSpec(BaseModel):
 class TabWidgetProps(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    tabs: list[TabSpec] = Field(default_factory=lambda: [TabSpec(title="Tab 1"), TabSpec(title="Tab 2")])
+    tabs: list[TabSpec] = Field(
+        default_factory=lambda: [TabSpec(title="Tab 1"), TabSpec(title="Tab 2")]
+    )
     current_index: int = Field(default=0, ge=0, alias="currentIndex")
 
 
@@ -224,6 +226,69 @@ class ScrollAreaNode(NodeCommon):
     props: ScrollAreaProps = Field(default_factory=ScrollAreaProps)
 
 
+class DateEditProps(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    date: str = "2024-01-01"
+    on_change: str | None = Field(default=None, alias="onChange")
+
+
+class DateEditNode(NodeCommon):
+    type: Literal["date_edit"] = "date_edit"
+    props: DateEditProps = Field(default_factory=DateEditProps)
+
+
+class TimeEditProps(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    time: str = "12:00:00"
+    on_change: str | None = Field(default=None, alias="onChange")
+
+
+class TimeEditNode(NodeCommon):
+    type: Literal["time_edit"] = "time_edit"
+    props: TimeEditProps = Field(default_factory=TimeEditProps)
+
+
+class TableWidgetProps(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    rows: int = Field(default=3, ge=1)
+    columns: int = Field(default=3, ge=1)
+    on_cell_changed: str | None = Field(default=None, alias="onCellChanged")
+
+
+class TableWidgetNode(NodeCommon):
+    type: Literal["table_widget"] = "table_widget"
+    props: TableWidgetProps = Field(default_factory=TableWidgetProps)
+
+
+class DialProps(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    min: int = 0
+    max: int = 100
+    value: int = 0
+    on_change: str | None = Field(default=None, alias="onChange")
+
+
+class DialNode(NodeCommon):
+    type: Literal["dial"] = "dial"
+    props: DialProps = Field(default_factory=DialProps)
+
+
+class ToolButtonProps(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str = ""
+    on_click: str | None = Field(default=None, alias="onClick")
+
+
+class ToolButtonNode(NodeCommon):
+    type: Literal["tool_button"] = "tool_button"
+    props: ToolButtonProps = Field(default_factory=ToolButtonProps)
+
+
 Node = Annotated[
     WindowNode
     | FrameNode
@@ -240,6 +305,11 @@ Node = Annotated[
     | GroupBoxNode
     | TabWidgetNode
     | ProgressBarNode
-    | ScrollAreaNode,
+    | ScrollAreaNode
+    | DateEditNode
+    | TimeEditNode
+    | TableWidgetNode
+    | DialNode
+    | ToolButtonNode,
     Field(discriminator="type"),
 ]

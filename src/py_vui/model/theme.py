@@ -133,9 +133,7 @@ def stylesheet_for_node(
     node_type: str,
     style: WidgetStyle | None,
 ) -> str:
-    fill, border, text = resolve_widget_colors(
-        theme=theme, node_type=node_type, style=style
-    )
+    fill, border, text = resolve_widget_colors(theme=theme, node_type=node_type, style=style)
     radius = (
         style.border_radius
         if style and style.border_radius is not None
@@ -190,6 +188,16 @@ def stylesheet_for_node(
         return f"QLabel {{ {base} border: none; background: transparent; }}"
     if node_type == "frame":
         return f"QFrame {{ {base} }}"
+    if node_type == "date_edit":
+        return f"QDateEdit {{ {base} }}"
+    if node_type == "time_edit":
+        return f"QTimeEdit {{ {base} }}"
+    if node_type == "table_widget":
+        return f"QTableWidget {{ {base} }}"
+    if node_type == "dial":
+        return f"QDial {{ {base} }}"
+    if node_type == "tool_button":
+        return f"QToolButton {{ {base} }} QToolButton:hover {{ background-color: {fill}; }}"
     return ""
 
 

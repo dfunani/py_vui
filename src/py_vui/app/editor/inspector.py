@@ -18,19 +18,27 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from py_vui.app.editor.handler_snippets import HANDLER_SNIPPETS
 from py_vui.commands import ReplaceNode
 from py_vui.model.interaction import HandlerDef, default_handler_name
 from py_vui.model.nodes import (
     ButtonNode,
     CheckboxNode,
     ComboBoxNode,
+    DialNode,
+    GroupBoxNode,
     LabelNode,
     LineEditNode,
+    ListWidgetNode,
     Node,
+    RadioButtonNode,
+    SliderNode,
+    SpinBoxNode,
+    TableWidgetNode,
     TextEditNode,
+    ToolButtonNode,
     WindowNode,
 )
-from py_vui.app.editor.handler_snippets import HANDLER_SNIPPETS
 from py_vui.model.theme import WidgetStyle, theme_for_preset
 
 if TYPE_CHECKING:
@@ -109,6 +117,33 @@ class PropertyInspector(QWidget):
         self._combo_items.setPlaceholderText("Option 1, Option 2, …")
         self._combo_items.editingFinished.connect(self._apply)
         prop_form.addRow("Combo items", self._combo_items)
+        self._list_items = QLineEdit()
+        self._list_items.setPlaceholderText("Item 1, Item 2, …")
+        self._list_items.editingFinished.connect(self._apply)
+        prop_form.addRow("List items", self._list_items)
+        self._spin_min = QSpinBox()
+        self._spin_min.setRange(-99999, 99999)
+        self._spin_min.editingFinished.connect(self._apply)
+        self._spin_max = QSpinBox()
+        self._spin_max.setRange(-99999, 99999)
+        self._spin_max.setValue(100)
+        self._spin_max.editingFinished.connect(self._apply)
+        self._spin_value = QSpinBox()
+        self._spin_value.setRange(-99999, 99999)
+        self._spin_value.editingFinished.connect(self._apply)
+        prop_form.addRow("Min", self._spin_min)
+        prop_form.addRow("Max", self._spin_max)
+        prop_form.addRow("Value", self._spin_value)
+        self._table_rows = QSpinBox()
+        self._table_rows.setRange(1, 999)
+        self._table_rows.setValue(3)
+        self._table_rows.editingFinished.connect(self._apply)
+        self._table_cols = QSpinBox()
+        self._table_cols.setRange(1, 999)
+        self._table_cols.setValue(3)
+        self._table_cols.editingFinished.connect(self._apply)
+        prop_form.addRow("Rows", self._table_rows)
+        prop_form.addRow("Columns", self._table_cols)
         layout.addWidget(props)
 
         appearance = QGroupBox("Appearance")
@@ -283,11 +318,11 @@ class PropertyInspector(QWidget):
         handler = force_name if force_name is not None else self._current_handler_name()
         before = node
         data = node.model_dump()
-        if isinstance(node, ButtonNode):
+        if isinstance(node, (ButtonNode, ToolButtonNode)):
             data["props"]["onClick"] = handler
         elif isinstance(node, LineEditNode):
             data["props"]["onReturn"] = handler
-        elif isinstance(node, CheckboxNode):
+        elif isinstance(node, (CheckboxNode, RadioButtonNode)):
             data["props"]["onToggle"] = handler
         elif isinstance(node, TextEditNode):
             data["props"]["onChange"] = handler
@@ -350,19 +385,36 @@ class PropertyInspector(QWidget):
                     WindowNode,
                     LabelNode,
                     ButtonNode,
+                    ToolButtonNode,
                     LineEditNode,
                     CheckboxNode,
+                    RadioButtonNode,
                     TextEditNode,
+                    GroupBoxNode,
                 ),
             )
         )
-        self._placeholder.setVisible(
-            isinstance(node, (LineEditNode, TextEditNode))
-        )
-        self._checked.setVisible(isinstance(node, CheckboxNode))
+        self._placeholder.setVisible(isinstance(node, (LineEditNode, TextEditNode)))
+        self._checked.setVisible(isinstance(node, (CheckboxNode, RadioButtonNode)))
         self._combo_items.setVisible(isinstance(node, ComboBoxNode))
+        self._list_items.setVisible(isinstance(node, ListWidgetNode))
+        is_range_node = isinstance(node, (SpinBoxNode, SliderNode, DialNode))
+        self._spin_min.setVisible(is_range_node)
+        self._spin_max.setVisible(is_range_node)
+        self._spin_value.setVisible(is_range_node)
+        is_table = isinstance(node, TableWidgetNode)
+        self._table_rows.setVisible(is_table)
+        self._table_cols.setVisible(is_table)
         has_action = isinstance(
-            node, (ButtonNode, LineEditNode, CheckboxNode, TextEditNode)
+            node,
+            (
+                ButtonNode,
+                ToolButtonNode,
+                LineEditNode,
+                CheckboxNode,
+                RadioButtonNode,
+                TextEditNode,
+            ),
         )
         self._interaction_group.setVisible(has_action)
         for w in (
@@ -373,15 +425,25 @@ class PropertyInspector(QWidget):
         ):
             w.setVisible(has_action)
 
-        self._text.blockSignals(True)
-        self._placeholder.blockSignals(True)
-        self._checked.blockSignals(True)
-        self._combo_items.blockSignals(True)
+        for w in (
+            self._text,
+            self._placeholder,
+            self._checked,
+            self._combo_items,
+            self._list_items,
+            self._spin_min,
+            self._spin_max,
+            self._spin_value,
+            self._table_rows,
+            self._table_cols,
+        ):
+            w.blockSignals(True)
+
         if isinstance(node, WindowNode):
             self._text.setText(node.props.title)
         elif isinstance(node, LabelNode):
             self._text.setText(node.props.text)
-        elif isinstance(node, ButtonNode):
+        elif isinstance(node, (ButtonNode, ToolButtonNode)):
             self._text.setText(node.props.text)
         elif isinstance(node, LineEditNode):
             self._text.setText(node.props.text)
@@ -389,17 +451,45 @@ class PropertyInspector(QWidget):
         elif isinstance(node, CheckboxNode):
             self._text.setText(node.props.text)
             self._checked.setChecked(node.props.checked)
+        elif isinstance(node, RadioButtonNode):
+            self._text.setText(node.props.text)
+            self._checked.setChecked(node.props.checked)
         elif isinstance(node, TextEditNode):
             self._text.setText(node.props.text)
             self._placeholder.setText(node.props.placeholder)
         elif isinstance(node, ComboBoxNode):
             self._combo_items.setText(", ".join(node.props.items))
+        elif isinstance(node, ListWidgetNode):
+            self._list_items.setText(", ".join(node.props.items))
+        elif isinstance(node, (SpinBoxNode, DialNode)):
+            self._spin_min.setValue(node.props.min)
+            self._spin_max.setValue(node.props.max)
+            self._spin_value.setValue(node.props.value)
+        elif isinstance(node, SliderNode):
+            self._spin_min.setValue(node.props.min)
+            self._spin_max.setValue(node.props.max)
+            self._spin_value.setValue(node.props.value)
+        elif isinstance(node, GroupBoxNode):
+            self._text.setText(node.props.title)
+        elif isinstance(node, TableWidgetNode):
+            self._table_rows.setValue(node.props.rows)
+            self._table_cols.setValue(node.props.columns)
         else:
             self._text.clear()
-        self._text.blockSignals(False)
-        self._placeholder.blockSignals(False)
-        self._checked.blockSignals(False)
-        self._combo_items.blockSignals(False)
+
+        for w in (
+            self._text,
+            self._placeholder,
+            self._checked,
+            self._combo_items,
+            self._list_items,
+            self._spin_min,
+            self._spin_max,
+            self._spin_value,
+            self._table_rows,
+            self._table_cols,
+        ):
+            w.blockSignals(False)
 
         style = node.style or WidgetStyle()
         self._bg.blockSignals(True)
@@ -416,11 +506,11 @@ class PropertyInspector(QWidget):
         self._radius.blockSignals(False)
 
         handler: str | None = None
-        if isinstance(node, ButtonNode):
+        if isinstance(node, (ButtonNode, ToolButtonNode)):
             handler = node.props.on_click
         elif isinstance(node, LineEditNode):
             handler = node.props.on_return
-        elif isinstance(node, CheckboxNode):
+        elif isinstance(node, (CheckboxNode, RadioButtonNode)):
             handler = node.props.on_toggle
         elif isinstance(node, TextEditNode):
             handler = node.props.on_change
@@ -485,14 +575,39 @@ class PropertyInspector(QWidget):
             data["props"]["height"] = h
             data["layout"]["box"]["w"] = w
             data["layout"]["box"]["h"] = h
-        elif isinstance(node, (LabelNode, ButtonNode, LineEditNode, CheckboxNode)):
+        elif isinstance(
+            node,
+            (
+                LabelNode,
+                ButtonNode,
+                ToolButtonNode,
+                LineEditNode,
+                CheckboxNode,
+                RadioButtonNode,
+            ),
+        ):
             data["props"]["text"] = self._text.text()
-        if isinstance(node, CheckboxNode):
+        elif isinstance(node, GroupBoxNode):
+            data["props"]["title"] = self._text.text()
+        elif isinstance(node, TextEditNode):
+            data["props"]["text"] = self._text.text()
+
+        if isinstance(node, (CheckboxNode, RadioButtonNode)):
             data["props"]["checked"] = self._checked.isChecked()
         if isinstance(node, (LineEditNode, TextEditNode)):
             data["props"]["placeholder"] = self._placeholder.text()
         if isinstance(node, ComboBoxNode):
             raw = [p.strip() for p in self._combo_items.text().split(",") if p.strip()]
             data["props"]["items"] = raw or ["Option 1"]
+        if isinstance(node, ListWidgetNode):
+            raw = [p.strip() for p in self._list_items.text().split(",") if p.strip()]
+            data["props"]["items"] = raw or ["Item 1"]
+        if isinstance(node, (SpinBoxNode, DialNode, SliderNode)):
+            data["props"]["min"] = self._spin_min.value()
+            data["props"]["max"] = self._spin_max.value()
+            data["props"]["value"] = self._spin_value.value()
+        if isinstance(node, TableWidgetNode):
+            data["props"]["rows"] = self._table_rows.value()
+            data["props"]["columns"] = self._table_cols.value()
 
         return node.__class__.model_validate(data)

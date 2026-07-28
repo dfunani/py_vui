@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 from collections import deque
 from datetime import date
 from uuid import UUID
+
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from py_vui.models.nodes import Node, WindowNodeType
-from py_vui.models.schema import ADAPTER_ID, AdapterID, SCHEMA_VERSION, SchemaVersion
+from py_vui.models.schema import ADAPTER_ID, SCHEMA_VERSION, AdapterID, SchemaVersion
 
 
 class PrjoectMetaData(BaseModel):
@@ -49,9 +51,7 @@ class py_vuiProject(BaseModel):
 
         root = roots[0]
         if root.id != self.root_id:
-            raise ValueError(
-                f"root_id {self.root_id} must be the only node with parent_id None"
-            )
+            raise ValueError(f"root_id {self.root_id} must be the only node with parent_id None")
 
         if root.type != WindowNodeType:
             raise ValueError(f"root node must be type 'window', got {root.type!r}")
@@ -59,9 +59,7 @@ class py_vuiProject(BaseModel):
     def validate_nodes_references(self, nodes_hash_set: set[UUID]) -> None:
         for node in self.nodes:
             if node.parent_id and node.parent_id not in nodes_hash_set:
-                raise ValueError(
-                    f"node {node.id} references missing parent {node.parent_id}"
-                )
+                raise ValueError(f"node {node.id} references missing parent {node.parent_id}")
 
     def validate_nodes_cycles(self, nodes_hash_set: set[UUID]) -> None:
         queued_node_ids: set[UUID] = set()

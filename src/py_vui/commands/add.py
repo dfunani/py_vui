@@ -11,10 +11,7 @@ class AddNode(Command):
         if self.node.id in nodes_hash_set:
             raise ValueError(f"duplicate node id {self.node.id!r}")
 
-        if (
-            self.node.parent_id is not None
-            and self.node.parent_id not in nodes_hash_set
-        ):
+        if self.node.parent_id is not None and self.node.parent_id not in nodes_hash_set:
             raise ValueError(f"missing parent {self.node.parent_id!r}")
 
         node_index = project.get_node_index(self.node.id)

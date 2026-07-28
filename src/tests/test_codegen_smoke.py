@@ -20,4 +20,6 @@ def test_emit_minimal_contains_expected_symbols() -> None:
     assert files["requirements.txt"].strip() == "PySide6>=6.6"
     assert "chrome.py" in files
     assert "custom.py" in files
-    assert "py_vui: begin custom" in files.get("handlers.py", "") or "py_vui: begin custom" in files.get("custom.py", "")
+    assert "py_vui: begin custom" in files.get(
+        "handlers.py", ""
+    ) or "py_vui: begin custom" in files.get("custom.py", "")

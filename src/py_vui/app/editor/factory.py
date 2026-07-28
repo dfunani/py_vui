@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from py_vui.model.geometry import LayoutSpec, Rect
@@ -11,6 +11,10 @@ from py_vui.model.nodes import (
     CheckboxProps,
     ComboBoxNode,
     ComboBoxProps,
+    DateEditNode,
+    DateEditProps,
+    DialNode,
+    DialProps,
     FrameNode,
     FrameProps,
     GroupBoxNode,
@@ -32,10 +36,16 @@ from py_vui.model.nodes import (
     SliderProps,
     SpinBoxNode,
     SpinBoxProps,
+    TableWidgetNode,
+    TableWidgetProps,
     TabWidgetNode,
     TabWidgetProps,
     TextEditNode,
     TextEditProps,
+    TimeEditNode,
+    TimeEditProps,
+    ToolButtonNode,
+    ToolButtonProps,
     WindowNode,
     WindowProps,
 )
@@ -49,7 +59,7 @@ def new_node_id() -> str:
 
 def new_project(name: str = "untitled") -> py_vuiProject:
     root_id = new_node_id()
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     root = WindowNode(
         id=root_id,
         name="MainWindow",
@@ -209,6 +219,46 @@ def create_node(
                 parent_id=parent_id,
                 layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 160), h=max(h, 100))),
                 props=ScrollAreaProps(),
+            )
+        case "date_edit":
+            return DateEditNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 120), h=28)),
+                props=DateEditProps(),
+            )
+        case "time_edit":
+            return TimeEditNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 100), h=28)),
+                props=TimeEditProps(),
+            )
+        case "table_widget":
+            return TableWidgetNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 240), h=max(h, 160))),
+                props=TableWidgetProps(),
+            )
+        case "dial":
+            return DialNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=80, h=80)),
+                props=DialProps(),
+            )
+        case "tool_button":
+            return ToolButtonNode(
+                id=nid,
+                name=display,
+                parent_id=parent_id,
+                layout=LayoutSpec(box=Rect(x=x, y=y, w=max(w, 80), h=32)),
+                props=ToolButtonProps(text=display),
             )
         case other:
             raise ValueError(f"unknown widget type: {other!r}")

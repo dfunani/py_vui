@@ -1,6 +1,7 @@
 from typing import Literal
 
 from pydantic import BaseModel
+
 from py_vui.commands import Command
 from py_vui.models.project import py_vuiProject
 

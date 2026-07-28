@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QProcess, Qt, Signal
+from PySide6.QtCore import QProcess, Signal
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,

@@ -4,7 +4,8 @@ from py_vui.model.nodes import (
     ButtonNode,
     CheckboxNode,
     ComboBoxNode,
-    FrameNode,
+    DateEditNode,
+    DialNode,
     GroupBoxNode,
     LabelNode,
     LineEditNode,
@@ -15,8 +16,11 @@ from py_vui.model.nodes import (
     ScrollAreaNode,
     SliderNode,
     SpinBoxNode,
+    TableWidgetNode,
     TabWidgetNode,
     TextEditNode,
+    TimeEditNode,
+    ToolButtonNode,
     WindowNode,
 )
 from py_vui.model.project import py_vuiProject
@@ -41,6 +45,11 @@ def widget_ctor(node: Node) -> tuple[str, str]:
         "tab_widget": ("QTabWidget", "QTabWidget()"),
         "progress_bar": ("QProgressBar", "QProgressBar()"),
         "scroll_area": ("QScrollArea", "QScrollArea()"),
+        "date_edit": ("QDateEdit", "QDateEdit()"),
+        "time_edit": ("QTimeEdit", "QTimeEdit()"),
+        "table_widget": ("QTableWidget", "QTableWidget()"),
+        "dial": ("QDial", "QDial()"),
+        "tool_button": ("QToolButton", "QToolButton()"),
     }
     try:
         return table[node.type]
@@ -117,4 +126,19 @@ def props_lines(project: py_vuiProject, node: Node, var: str) -> list[str]:
         lines.append(f"{var}.setValue({p.value})")
     elif isinstance(node, ScrollAreaNode):
         lines.append(f"{var}.setWidgetResizable(True)")
+    elif isinstance(node, DateEditNode):
+        lines.append(f"{var}.setDate(QDate.fromString({node.props.date!r}, 'yyyy-MM-dd'))")
+        lines.append(f"{var}.setCalendarPopup(True)")
+    elif isinstance(node, TimeEditNode):
+        lines.append(f"{var}.setTime(QTime.fromString({node.props.time!r}, 'HH:mm:ss'))")
+    elif isinstance(node, TableWidgetNode):
+        p = node.props
+        lines.append(f"{var}.setRowCount({p.rows})")
+        lines.append(f"{var}.setColumnCount({p.columns})")
+    elif isinstance(node, DialNode):
+        p = node.props
+        lines.append(f"{var}.setRange({p.min}, {p.max})")
+        lines.append(f"{var}.setValue({p.value})")
+    elif isinstance(node, ToolButtonNode):
+        lines.append(f"{var}.setText({node.props.text!r})")
     return lines

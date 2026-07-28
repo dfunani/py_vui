@@ -1,5 +1,5 @@
 from collections import deque
-from uuid import UUID
+
 from py_vui.commands import Command
 from py_vui.models.nodes import Node
 from py_vui.models.project import py_vuiProject

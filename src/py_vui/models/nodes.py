@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Literal
 from uuid import UUID
 
@@ -6,12 +7,12 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from py_vui.models.geometry import LayoutSpecification
 from py_vui.models.properties import (
-    WindowProperties,
+    ButtonProperties,
+    CheckboxProperties,
     FrameProperties,
     LabelProperties,
-    ButtonProperties,
     LineEditProperties,
-    CheckboxProperties,
+    WindowProperties,
 )
 
 WindowNodeType = Literal["window"]
@@ -30,7 +31,14 @@ NodeType = (
     | CheckboxNodeType
 )
 type Node = WindowNode | FrameNode | LabelNode | ButtonNode | LineEditNode | CheckboxNode
-type NodeProperties = WindowProperties | FrameProperties | LabelProperties | ButtonProperties | LineEditProperties | CheckboxProperties
+type NodeProperties = (
+    WindowProperties
+    | FrameProperties
+    | LabelProperties
+    | ButtonProperties
+    | LineEditProperties
+    | CheckboxProperties
+)
 
 
 class BaseNode(BaseModel):

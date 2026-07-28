@@ -1,7 +1,7 @@
 from py_vui.commands import Command
+from py_vui.models.geometry import Rectangle
 from py_vui.models.nodes import Node
 from py_vui.models.project import py_vuiProject
-from py_vui.models.geometry import Rectangle
 
 
 class SetNodeLayout(Command):

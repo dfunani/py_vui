@@ -19,8 +19,7 @@ def copy_subtree_to_clipboard(doc: ProjectDocument, root_id: str) -> bool:
     ids = collect_subtree_ids(doc, root_id)
     payload: dict[str, Any] = {
         "nodes": {
-            nid: doc.project.nodes[nid].model_dump(mode="json", by_alias=True)
-            for nid in ids
+            nid: doc.project.nodes[nid].model_dump(mode="json", by_alias=True) for nid in ids
         },
         "rootId": root_id,
     }

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from py_vui.model.serde import load_json_bytes
 from py_vui.model.project import py_vuiProject
+from py_vui.model.serde import load_json_bytes
 
 _TEMPLATES_DIR = Path(__file__).resolve().parents[4] / "examples" / "templates"
 

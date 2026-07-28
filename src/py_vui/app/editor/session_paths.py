@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 SESSION_DOCUMENT = "py_vui.json"
@@ -18,16 +18,12 @@ def sanitize_project_slug(name: str) -> str:
     return slug or "untitled"
 
 
-def resolve_project_dir(
-    parent: Path, project_name: str, *, current: Path | None = None
-) -> Path:
+def resolve_project_dir(parent: Path, project_name: str, *, current: Path | None = None) -> Path:
     """Pick <parent>/<slug> or <parent>/<slug>-2 if taken (reuse current folder)."""
     parent = parent.resolve()
     slug = sanitize_project_slug(project_name)
     preferred = parent / slug
-    if not preferred.exists() or (
-        current is not None and preferred.resolve() == current.resolve()
-    ):
+    if not preferred.exists() or (current is not None and preferred.resolve() == current.resolve()):
         return preferred
     for n in range(2, 1000):
         candidate = parent / f"{slug}-{n}"
@@ -55,7 +51,7 @@ def write_session_meta(project_dir: Path, *, project_name: str, app_version: str
     payload = {
         "format": SESSION_FORMAT,
         "project_name": project_name,
-        "saved_at": datetime.now(timezone.utc).isoformat(),
+        "saved_at": datetime.now(UTC).isoformat(),
         "py_vui_version": app_version,
         "document": SESSION_DOCUMENT,
         "app_output_dir": APP_SUBDIR,

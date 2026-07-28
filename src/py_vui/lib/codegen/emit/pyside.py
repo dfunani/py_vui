@@ -1,26 +1,26 @@
 from __future__ import annotations
-import re
+
 import textwrap
 from uuid import UUID
 
 from py_vui.lib.codegen.types import WrittenFile
 from py_vui.models.nodes import (
+    ButtonNode,
+    CheckboxNode,
+    FrameNode,
+    LabelNode,
+    LineEditNode,
     Node,
     NodeType,
     WindowNode,
-    FrameNode,
-    LabelNode,
-    ButtonNode,
-    LineEditNode,
-    CheckboxNode,
 )
 from py_vui.models.project import py_vuiProject
 from py_vui.models.properties import (
-    WindowProperties,
-    LabelProperties,
     ButtonProperties,
-    LineEditProperties,
     CheckboxProperties,
+    LabelProperties,
+    LineEditProperties,
+    WindowProperties,
 )
 
 
@@ -72,9 +72,7 @@ class PySideEmitter:
     ) -> list[str]:
         properties: list[str] = []
         properties.append(f"{property}.setText({node_properties.text!r})")
-        properties.append(
-            f"{property}.setPlaceholderText({node_properties.placeholder!r})"
-        )
+        properties.append(f"{property}.setPlaceholderText({node_properties.placeholder!r})")
         return properties
 
     def _handle_checkbox_properties(
@@ -88,31 +86,25 @@ class PySideEmitter:
     def _emit_property_lines(self, node: Node, property: str) -> list[str]:
         properties: list[str] = []
         layout_box = node.layout.box
-        properties.append(
-            f"{property}.setGeometry(int({layout_box.x}), int({layout_box.y}), int({layout_box.width}), int({layout_box.height}))"
-        )
+
+        x = f"int({layout_box.x})"
+        y = f"int({layout_box.y})"
+        width = f"int({layout_box.width})"
+        height = f"int({layout_box.height})"
+        properties.append(f"{property}.setGeometry({x}, {y}, {width}, {height})")
+
         node_properties = node.properties
         match node_properties:
             case WindowProperties():
-                properties.extend(
-                    self._handle_window_properties(node_properties, property)
-                )
+                properties.extend(self._handle_window_properties(node_properties, property))
             case LabelProperties():
-                properties.extend(
-                    self._handle_label_properties(node_properties, property)
-                )
+                properties.extend(self._handle_label_properties(node_properties, property))
             case ButtonProperties():
-                properties.extend(
-                    self._handle_button_properties(node_properties, property)
-                )
+                properties.extend(self._handle_button_properties(node_properties, property))
             case LineEditProperties():
-                properties.extend(
-                    self._handle_line_edit_properties(node_properties, property)
-                )
+                properties.extend(self._handle_line_edit_properties(node_properties, property))
             case CheckboxProperties():
-                properties.extend(
-                    self._handle_checkbox_properties(node_properties, property)
-                )
+                properties.extend(self._handle_checkbox_properties(node_properties, property))
             case _:
                 msg = f"unsupported node type for PySide6 emit: {node.type!r}"
                 raise ValueError(msg)

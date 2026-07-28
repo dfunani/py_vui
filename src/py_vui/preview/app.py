@@ -14,9 +14,7 @@ class PreviewResult(BaseModel):
     error: str
 
 
-def run_preview(
-    project_root: Path, script: Path, *, timeout_s: float = 30.0
-) -> PreviewResult:
+def run_preview(project_root: Path, script: Path, *, timeout_s: float = 30.0) -> PreviewResult:
     """Run `python entry` with cwd=`project_root` (resolved to absolute)."""
 
     root = project_root.resolve()
@@ -39,6 +37,4 @@ def run_preview(
         timeout=timeout_s,
         check=False,
     )
-    return PreviewResult(
-        status_code=proc.returncode, response=proc.stdout, error=proc.stderr
-    )
+    return PreviewResult(status_code=proc.returncode, response=proc.stdout, error=proc.stderr)

@@ -17,14 +17,19 @@ from PySide6.QtWidgets import (
 )
 
 from py_vui.app.editor.canvas import DesignCanvas
-from py_vui.app.editor.clipboard_io import copy_subtree_to_clipboard, read_subtree_from_clipboard
+from py_vui.app.editor.clipboard_io import (
+    copy_subtree_to_clipboard,
+    read_subtree_from_clipboard,
+)
 from py_vui.app.editor.inspector import PropertyInspector
 from py_vui.app.editor.palette import WidgetPalette
-from py_vui.app.editor.widget_tree import WidgetTreePanel
+from py_vui.app.editor.preview_dock import LivePreviewDock
 from py_vui.app.editor.project_service import ProjectService
+from py_vui.app.editor.project_templates import list_templates, load_template
 from py_vui.app.editor.recent_projects import load_recent, remember
 from py_vui.app.editor.save_project_dialog import SaveProjectDialog
 from py_vui.app.editor.session_paths import SESSION_DOCUMENT, sanitize_project_slug
+from py_vui.app.editor.widget_tree import WidgetTreePanel
 from py_vui.commands import (
     AddNodes,
     AlignInParent,
@@ -33,16 +38,14 @@ from py_vui.commands import (
     collect_subtree_ids,
     remap_subtree,
 )
-from py_vui.app.editor.preview_dock import LivePreviewDock
-from py_vui.app.editor.project_templates import list_templates, load_template
 from py_vui.model.serde import load_json_bytes
 
 
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("py_vui")
-        self.resize(1280, 800)
+        self.setWindowTitle("py_vui — Visual UI Builder")
+        self.resize(1360, 860)
 
         self._service = ProjectService.new()
         self._doc = self._service.doc
@@ -196,7 +199,10 @@ class MainWindow(QMainWindow):
             align_menu.addAction(act)
 
         dist_menu = edit_menu.addMenu("&Distribute")
-        for axis, label in (("horizontal", "Distribute horizontally"), ("vertical", "Distribute vertically")):
+        for axis, label in (
+            ("horizontal", "Distribute horizontally"),
+            ("vertical", "Distribute vertically"),
+        ):
             act = QAction(label, self)
             act.triggered.connect(lambda _checked=False, a=axis: self._distribute(a))
             dist_menu.addAction(act)
@@ -243,9 +249,7 @@ class MainWindow(QMainWindow):
             folder = path.parent if path.name == SESSION_DOCUMENT else path
             act = self._recent_menu.addAction(folder.name)
             act.setToolTip(str(folder))
-            act.triggered.connect(
-                lambda _checked=False, p=folder: self._open_project_path(p)
-            )
+            act.triggered.connect(lambda _checked=False, p=folder: self._open_project_path(p))
 
     def _connect_signals(self) -> None:
         self._canvas.selection_changed.connect(self._on_selection)
@@ -336,7 +340,9 @@ class MainWindow(QMainWindow):
             return str(self._service.project_dir.parent)
         recent = load_recent()
         if recent:
-            return str(recent[0].parent.parent if recent[0].name == SESSION_DOCUMENT else recent[0].parent)
+            return str(
+                recent[0].parent.parent if recent[0].name == SESSION_DOCUMENT else recent[0].parent
+            )
         return str(Path.home() / "Documents")
 
     def _open_project_folder(self) -> None:
@@ -419,9 +425,7 @@ class MainWindow(QMainWindow):
         self._update_title()
         self.statusBar().showMessage(f"Saved project: {folder}", 5000)
         self._output.appendPlainText(
-            f"Saved project folder: {folder}\n"
-            f"  {SESSION_DOCUMENT}\n"
-            f"  session.meta.json"
+            f"Saved project folder: {folder}\n  {SESSION_DOCUMENT}\n  session.meta.json"
         )
         suffix = " (new copy)" if new_name else ""
         QMessageBox.information(
@@ -491,7 +495,7 @@ class MainWindow(QMainWindow):
                 "Export complete",
                 f"Wrote a runnable app to:\n{export_path}\n\n"
                 f"(inside the folder you chose, named after project "
-                f"\"{self._service.project_name()}\")\n\n"
+                f'"{self._service.project_name()}")\n\n'
                 "Setup and run:\n"
                 f"  cd {export_path}\n"
                 "  pip install -r requirements.txt\n"
@@ -541,9 +545,7 @@ class MainWindow(QMainWindow):
             self._service.write_generated()
             self._update_preview_dir()
             self._preview_dock.restart_preview()
-            self._output.appendPlainText(
-                f"Preview started: {self._service.app_dir() / 'main.py'}"
-            )
+            self._output.appendPlainText(f"Preview started: {self._service.app_dir() / 'main.py'}")
         except Exception as exc:
             QMessageBox.critical(self, "Preview failed", str(exc))
 
