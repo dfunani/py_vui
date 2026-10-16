@@ -1,0 +1,673 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_attach": {
+        "body": "print(\"on_attach\")",
+        "name": "on_attach"
+      },
+      "on_contact": {
+        "body": "print(\"on_contact\")",
+        "name": "on_contact"
+      },
+      "on_send": {
+        "body": "print(\"on_send\")",
+        "name": "on_send"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Contacts sidebar, message log and composer (flex).",
+      "name": "Chat Window",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "attach": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 70.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_attach"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "attach",
+        "layout": null,
+        "locked": false,
+        "name": "Attach",
+        "page": 0,
+        "parentId": "composer",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Attach"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 0
+      },
+      "body": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "body",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Body",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "composer": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "composer",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Composer",
+        "page": 0,
+        "parentId": "conversation",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "contacts": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 120.0,
+          "w": 160.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "select": "on_contact"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "contacts",
+        "layout": null,
+        "locked": false,
+        "name": "Contacts",
+        "page": 0,
+        "parentId": "body",
+        "props": {
+          "items": [
+            "Alice",
+            "Bob",
+            "Carol",
+            "Dave"
+          ],
+          "selection_mode": "single"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "listbox",
+        "visible": true,
+        "zIndex": 0
+      },
+      "conversation": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "conversation",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Conversation",
+        "page": 0,
+        "parentId": "body",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "header": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 44.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "header",
+        "layout": null,
+        "locked": false,
+        "name": "Header",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "  Team chat",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 500.0,
+          "w": 720.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 0.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 500,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Chat Window",
+          "width": 720
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "message": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 260.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "submit": "on_send"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "message",
+        "layout": null,
+        "locked": false,
+        "name": "Message",
+        "page": 0,
+        "parentId": "composer",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "Type a message",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 1
+      },
+      "messages": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 120.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "messages",
+        "layout": null,
+        "locked": false,
+        "name": "Messages",
+        "page": 0,
+        "parentId": "conversation",
+        "props": {
+          "placeholder": "",
+          "readonly": true,
+          "scrollbar": true,
+          "text": "Alice: Hi there!\nYou: Hello!\nAlice: Ready for the demo?",
+          "wrap": "word"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "text",
+        "visible": true,
+        "zIndex": 0
+      },
+      "send": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 80.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_send"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "send",
+        "layout": null,
+        "locked": false,
+        "name": "Send",
+        "page": 0,
+        "parentId": "composer",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Send"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f4f4f5",
+      "border": "#d4d4d8",
+      "borderWidth": 1,
+      "buttonRadius": 10,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#71717a",
+      "preset": "modern",
+      "primary": "#6366f1",
+      "primaryHover": "#4f46e5",
+      "surface": "#ffffff",
+      "text": "#18181b"
+    }
+  },
+  "template": {
+    "category": "Apps",
+    "description": "Contacts sidebar, message log and composer (flex).",
+    "name": "Chat Window",
+    "tags": [
+      "flex",
+      "chat"
+    ]
+  }
+}

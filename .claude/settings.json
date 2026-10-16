@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL -m 60 -A \"Mozilla/5.0\" https://pyuibuilder.com/js/main.749945f13789455d9004.js -o main.js -w \"%{http_code} %{size_download}\\\\n\")",
+      "Bash(grep -oE 'widgetType:\"[^\"]+\"|widgetName:\"[^\"]+\"|name:\"[A-Z][A-Za-z ]{2,30}\"' main.js)",
+      "Bash(curl -sL -m 30 -A \"Mozilla/5.0\" https://pyuibuilder.com/python-gui-builder.html)",
+      "WebFetch(domain:docs.pyuibuilder.com)",
+      "Bash(awk -F: '{print $3}')",
+      "Bash(python3 -c \"import tkinter, sys; print\\('tk', tkinter.TkVersion\\)\")",
+      "Read(//Users/delalifunani/**)",
+      "Bash(python3 -)",
+      "Bash(.venv/bin/python -m pytest src/tests -q)",
+      "Bash(.venv/bin/python -c \"import PySide6;print\\(PySide6.__version__\\)\")",
+      "Bash(env -u VIRTUAL_ENV uv venv --python 3.12 tkenv -q)",
+      "Bash(env -u VIRTUAL_ENV uv pip install -q --python tkenv/bin/python pydantic pytest customtkinter tkcalendar pillow tkintermapview tktimepicker matplotlib pandas pandastable)",
+      "Bash(tkenv/bin/python -c \"import customtkinter, tkcalendar; print\\('ok'\\)\")",
+      "Bash(env -u VIRTUAL_ENV uv venv --python 3.12 kivyenv -q)",
+      "Bash(env -u VIRTUAL_ENV uv pip install -q --python kivyenv/bin/python pydantic pytest kivy)",
+      "Bash(kivyenv/bin/python -c \"import kivy; print\\(kivy.__version__\\)\")",
+      "Bash(env -u VIRTUAL_ENV uv pip install -q --python /Users/delalifunani/Github/py_vui/.venv/bin/python PyQt6)",
+      "Bash(sort -k2)",
+      "Bash(awk '{print $0}')",
+      "Bash(grep -c '^$' src/py_vui/codegen/qt_adapter.py)",
+      "Bash(/Users/delalifunani/Github/py_vui/.venv/bin/python -)",
+      "Bash(.venv/bin/ruff --version)",
+      "Bash(.venv/bin/ruff check *)",
+      "Bash(/private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/work/t.sh src/tests/test_tk_adapter.py -k \"builds\")",
+      "Bash(.venv/bin/python -)",
+      "Bash(LINES_MAX=120 /private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/work/t.sh src/tests/test_ctk_adapter.py)",
+      "Bash(export TCL_LIBRARY=/Users/delalifunani/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/tcl8.6 TK_LIBRARY=/Users/delalifunani/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/tk8.6)",
+      "Bash(PYTHONPATH=src /private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/tkenv/bin/python -m pytest -x -q -p no:cacheprovider src/tests/test_ctk_adapter.py -k events_fire)",
+      "Bash(LINES_MAX=120 /private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/work/t.sh src/tests/)",
+      "Bash(LINES_MAX=120 /private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/work/t.sh src/tests/test_tk_adapter.py src/tests/test_ctk_adapter.py -p no:randomly)",
+      "Bash(.venv/bin/python -m pytest src/tests/test_tk_adapter.py src/tests/test_ctk_adapter.py -q -p no:cacheprovider)",
+      "Bash(QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest src/tests/test_editor_window.py -x -q --durations=8 -k \"constructs or palette_search or unsupported\")",
+      "Bash(PYTHONPATH=src /private/tmp/claude-502/-Users-delalifunani-Github-py-vui/b47a8894-3302-43fa-8f0f-12c60f24183f/scratchpad/tkenv/bin/python -m pytest -x -q -p no:cacheprovider src/tests/test_tk_adapter.py -k \"edge\")",
+      "Bash(QT_QPA_PLATFORM=offscreen perl -e 'alarm shift; exec @ARGV' 110 .venv/bin/python -m pytest src/tests/test_editor_paint.py -q)"
+    ]
+  }
+}

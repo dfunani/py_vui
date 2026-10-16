@@ -1,0 +1,607 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "tasks = []",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_add": {
+        "body": "print(\"add task\")\ntasks.append(\"new task\")",
+        "name": "on_add"
+      },
+      "on_clear": {
+        "body": "tasks.clear()\nprint(\"cleared\")",
+        "name": "on_clear"
+      },
+      "on_remove": {
+        "body": "print(\"remove selected task\")",
+        "name": "on_remove"
+      },
+      "on_select": {
+        "body": "print(\"task selected\")",
+        "name": "on_select"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Add, complete and clear tasks.",
+      "name": "To-do List",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "action_row": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "action_row",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "end",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Action Row",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 3
+      },
+      "add": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 80.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_add"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "add",
+        "layout": null,
+        "locked": false,
+        "name": "Add",
+        "page": 0,
+        "parentId": "add_row",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Add"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "add_row": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "add_row",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Add Row",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "clear_all": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_clear"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "clear_all",
+        "layout": null,
+        "locked": false,
+        "name": "Clear all",
+        "page": 0,
+        "parentId": "action_row",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Clear all"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 520.0,
+          "w": 420.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 520,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "To-do List",
+          "width": 420
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "new_task": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "submit": "on_add"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "new_task",
+        "layout": null,
+        "locked": false,
+        "name": "New Task",
+        "page": 0,
+        "parentId": "add_row",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "What needs doing?",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 0
+      },
+      "remove": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_remove"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "remove",
+        "layout": null,
+        "locked": false,
+        "name": "Remove",
+        "page": 0,
+        "parentId": "action_row",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Remove"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 0
+      },
+      "tasks": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 120.0,
+          "w": 160.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "select": "on_select"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "tasks",
+        "layout": null,
+        "locked": false,
+        "name": "Tasks",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "items": [
+            "Buy milk",
+            "Write report"
+          ],
+          "selection_mode": "single"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "listbox",
+        "visible": true,
+        "zIndex": 2
+      },
+      "title": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "title",
+        "layout": null,
+        "locked": false,
+        "name": "Title",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "My tasks",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f0fdf4",
+      "border": "#bbf7d0",
+      "borderWidth": 1,
+      "buttonRadius": 8,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#4d7c0f",
+      "preset": "forest",
+      "primary": "#16a34a",
+      "primaryHover": "#15803d",
+      "surface": "#ffffff",
+      "text": "#14532d"
+    }
+  },
+  "template": {
+    "category": "Productivity",
+    "description": "Add, complete and clear tasks.",
+    "name": "To-do List",
+    "tags": [
+      "list",
+      "flex"
+    ]
+  }
+}

@@ -1,0 +1,1312 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "expression = ''\n\n\ndef _press(key):\n    global expression\n    if key == '=':\n        try:\n            expression = str(eval(expression, {'__builtins__': {}}))\n        except Exception:\n            expression = 'Error'\n    elif key == 'C':\n        expression = ''\n    else:\n        expression += key\n    print(expression)",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_key_0": {
+        "body": "_press('0')",
+        "name": "on_key_0"
+      },
+      "on_key_1": {
+        "body": "_press('1')",
+        "name": "on_key_1"
+      },
+      "on_key_2": {
+        "body": "_press('2')",
+        "name": "on_key_2"
+      },
+      "on_key_3": {
+        "body": "_press('3')",
+        "name": "on_key_3"
+      },
+      "on_key_4": {
+        "body": "_press('4')",
+        "name": "on_key_4"
+      },
+      "on_key_5": {
+        "body": "_press('5')",
+        "name": "on_key_5"
+      },
+      "on_key_6": {
+        "body": "_press('6')",
+        "name": "on_key_6"
+      },
+      "on_key_7": {
+        "body": "_press('7')",
+        "name": "on_key_7"
+      },
+      "on_key_8": {
+        "body": "_press('8')",
+        "name": "on_key_8"
+      },
+      "on_key_9": {
+        "body": "_press('9')",
+        "name": "on_key_9"
+      },
+      "on_key_clear": {
+        "body": "_press('C')",
+        "name": "on_key_clear"
+      },
+      "on_key_divide": {
+        "body": "_press('/')",
+        "name": "on_key_divide"
+      },
+      "on_key_dot": {
+        "body": "_press('.')",
+        "name": "on_key_dot"
+      },
+      "on_key_equals": {
+        "body": "_press('=')",
+        "name": "on_key_equals"
+      },
+      "on_key_lparen": {
+        "body": "_press('(')",
+        "name": "on_key_lparen"
+      },
+      "on_key_minus": {
+        "body": "_press('-')",
+        "name": "on_key_minus"
+      },
+      "on_key_multiply": {
+        "body": "_press('*')",
+        "name": "on_key_multiply"
+      },
+      "on_key_plus": {
+        "body": "_press('+')",
+        "name": "on_key_plus"
+      },
+      "on_key_rparen": {
+        "body": "_press(')')",
+        "name": "on_key_rparen"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Four-function calculator on a 4x6 grid.",
+      "name": "Calculator",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "display": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 4,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "display",
+        "layout": null,
+        "locked": false,
+        "name": "Display",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "justify": "right",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": true,
+          "show": "",
+          "text": "0"
+        },
+        "style": {
+          "font_size": 22
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 0
+      },
+      "key_0": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 2,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_0"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_0",
+        "layout": null,
+        "locked": false,
+        "name": "Key 0",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "0"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 17
+      },
+      "key_1": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_1"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_1",
+        "layout": null,
+        "locked": false,
+        "name": "Key 1",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "1"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 13
+      },
+      "key_2": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_2"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_2",
+        "layout": null,
+        "locked": false,
+        "name": "Key 2",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "2"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 14
+      },
+      "key_3": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_3"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_3",
+        "layout": null,
+        "locked": false,
+        "name": "Key 3",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "3"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 15
+      },
+      "key_4": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_4"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_4",
+        "layout": null,
+        "locked": false,
+        "name": "Key 4",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "4"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 9
+      },
+      "key_5": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_5"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_5",
+        "layout": null,
+        "locked": false,
+        "name": "Key 5",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "5"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 10
+      },
+      "key_6": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_6"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_6",
+        "layout": null,
+        "locked": false,
+        "name": "Key 6",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "6"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 11
+      },
+      "key_7": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_7"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_7",
+        "layout": null,
+        "locked": false,
+        "name": "Key 7",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "7"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 5
+      },
+      "key_8": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_8"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_8",
+        "layout": null,
+        "locked": false,
+        "name": "Key 8",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "8"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 6
+      },
+      "key_9": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_9"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_9",
+        "layout": null,
+        "locked": false,
+        "name": "Key 9",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "9"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 7
+      },
+      "key_clear": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_clear"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_clear",
+        "layout": null,
+        "locked": false,
+        "name": "Key clear",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "C"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "key_divide": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 3,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_divide"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_divide",
+        "layout": null,
+        "locked": false,
+        "name": "Key divide",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "/"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 4
+      },
+      "key_dot": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_dot"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_dot",
+        "layout": null,
+        "locked": false,
+        "name": "Key dot",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "."
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 18
+      },
+      "key_equals": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 3,
+          "columnSpan": 1,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_equals"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_equals",
+        "layout": null,
+        "locked": false,
+        "name": "Key equals",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "="
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 19
+      },
+      "key_lparen": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_lparen"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_lparen",
+        "layout": null,
+        "locked": false,
+        "name": "Key lparen",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "("
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      },
+      "key_minus": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 3,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_minus"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_minus",
+        "layout": null,
+        "locked": false,
+        "name": "Key minus",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "-"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 12
+      },
+      "key_multiply": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 3,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_multiply"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_multiply",
+        "layout": null,
+        "locked": false,
+        "name": "Key multiply",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "*"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 8
+      },
+      "key_plus": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 3,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_plus"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_plus",
+        "layout": null,
+        "locked": false,
+        "name": "Key plus",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "+"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 16
+      },
+      "key_rparen": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_key_rparen"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "key_rparen",
+        "layout": null,
+        "locked": false,
+        "name": "Key rparen",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": ")"
+        },
+        "style": {
+          "font_size": 16
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 3
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 460.0,
+          "w": 320.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 6.0,
+          "columnWeights": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "grid",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 6.0,
+          "rowWeights": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 460,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Calculator",
+          "width": 320
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "dark",
+      "background": "#09090b",
+      "border": "#3f3f46",
+      "borderWidth": 1,
+      "buttonRadius": 8,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#a1a1aa",
+      "preset": "midnight",
+      "primary": "#8b5cf6",
+      "primaryHover": "#7c3aed",
+      "surface": "#18181b",
+      "text": "#fafafa"
+    }
+  },
+  "template": {
+    "category": "Utilities",
+    "description": "Four-function calculator on a 4x6 grid.",
+    "name": "Calculator",
+    "tags": [
+      "grid",
+      "buttons"
+    ]
+  }
+}

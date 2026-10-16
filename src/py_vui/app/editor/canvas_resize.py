@@ -1,134 +1,87 @@
+"""Resize-handle geometry (pure helpers + Qt cursors)."""
+
 from __future__ import annotations
 
-from enum import StrEnum
-from typing import TYPE_CHECKING
+from PySide6.QtCore import QPointF, QRectF, Qt
 
-from PySide6.QtCore import QPointF, Qt
-from PySide6.QtGui import QBrush, QColor, QPen
-from PySide6.QtWidgets import QGraphicsRectItem
+HANDLES = ("nw", "n", "ne", "e", "se", "s", "sw", "w")
+HANDLE_PX = 8.0  # on-screen size of a handle
+HIT_PX = 7.0  # on-screen pick radius
 
-if TYPE_CHECKING:
-    from py_vui.app.editor.canvas import DesignCanvas, NodeGraphicsItem
-
-HANDLE_SIZE = 10.0
-MIN_WIDGET_W = 32.0
-MIN_WIDGET_H = 20.0
-
-
-class ResizeHandle(StrEnum):
-    NW = "nw"
-    N = "n"
-    NE = "ne"
-    E = "e"
-    SE = "se"
-    S = "s"
-    SW = "sw"
-    W = "w"
-
-
-_HANDLE_CURSORS: dict[ResizeHandle, Qt.CursorShape] = {
-    ResizeHandle.NW: Qt.CursorShape.SizeFDiagCursor,
-    ResizeHandle.N: Qt.CursorShape.SizeVerCursor,
-    ResizeHandle.NE: Qt.CursorShape.SizeBDiagCursor,
-    ResizeHandle.E: Qt.CursorShape.SizeHorCursor,
-    ResizeHandle.SE: Qt.CursorShape.SizeFDiagCursor,
-    ResizeHandle.S: Qt.CursorShape.SizeVerCursor,
-    ResizeHandle.SW: Qt.CursorShape.SizeBDiagCursor,
-    ResizeHandle.W: Qt.CursorShape.SizeHorCursor,
+_CURSORS = {
+    "nw": Qt.CursorShape.SizeFDiagCursor,
+    "se": Qt.CursorShape.SizeFDiagCursor,
+    "ne": Qt.CursorShape.SizeBDiagCursor,
+    "sw": Qt.CursorShape.SizeBDiagCursor,
+    "n": Qt.CursorShape.SizeVerCursor,
+    "s": Qt.CursorShape.SizeVerCursor,
+    "e": Qt.CursorShape.SizeHorCursor,
+    "w": Qt.CursorShape.SizeHorCursor,
 }
 
 
-def handle_anchor(handle: ResizeHandle, width: float, height: float) -> QPointF:
-    half = HANDLE_SIZE / 2
-    anchors: dict[ResizeHandle, QPointF] = {
-        ResizeHandle.NW: QPointF(0, 0),
-        ResizeHandle.N: QPointF(width / 2, 0),
-        ResizeHandle.NE: QPointF(width, 0),
-        ResizeHandle.E: QPointF(width, height / 2),
-        ResizeHandle.SE: QPointF(width, height),
-        ResizeHandle.S: QPointF(width / 2, height),
-        ResizeHandle.SW: QPointF(0, height),
-        ResizeHandle.W: QPointF(0, height / 2),
+def cursor_for(handle: str) -> Qt.CursorShape:
+    return _CURSORS[handle]
+
+
+def handle_points(rect: QRectF) -> dict[str, QPointF]:
+    cx, cy = rect.center().x(), rect.center().y()
+    return {
+        "nw": rect.topLeft(),
+        "n": QPointF(cx, rect.top()),
+        "ne": rect.topRight(),
+        "e": QPointF(rect.right(), cy),
+        "se": rect.bottomRight(),
+        "s": QPointF(cx, rect.bottom()),
+        "sw": rect.bottomLeft(),
+        "w": QPointF(rect.left(), cy),
     }
-    return anchors[handle] - QPointF(half, half)
 
 
-def compute_resized_box(
-    handle: ResizeHandle,
-    *,
-    start_x: float,
-    start_y: float,
-    start_w: float,
-    start_h: float,
+def hit_handle(rect: QRectF, pt: QPointF, scale: float) -> str | None:
+    """Return the handle under ``pt`` (scene coords), preferring corners over edges."""
+    tol = HIT_PX / scale
+    pts = handle_points(rect)
+    # small boxes: only corners are offered so edges never overlap the move area
+    names = HANDLES if min(rect.width(), rect.height()) * scale > 36 else ("nw", "ne", "se", "sw")
+    best: tuple[float, str] | None = None
+    for name in names:
+        q = pts[name]
+        d = max(abs(q.x() - pt.x()), abs(q.y() - pt.y()))
+        if d <= tol and (best is None or d < best[0]):
+            best = (d, name)
+    return best[1] if best else None
+
+
+def resize_rect(
+    handle: str,
+    start: QRectF,
     dx: float,
     dy: float,
-    min_w: float = MIN_WIDGET_W,
-    min_h: float = MIN_WIDGET_H,
-) -> tuple[float, float, float, float]:
-    x, y, w, h = start_x, start_y, start_w, start_h
-
-    if handle in (ResizeHandle.E, ResizeHandle.NE, ResizeHandle.SE):
-        w = max(min_w, start_w + dx)
-    if handle in (ResizeHandle.W, ResizeHandle.NW, ResizeHandle.SW):
-        w = max(min_w, start_w - dx)
-        x = start_x + (start_w - w)
-
-    if handle in (ResizeHandle.S, ResizeHandle.SE, ResizeHandle.SW):
-        h = max(min_h, start_h + dy)
-    if handle in (ResizeHandle.N, ResizeHandle.NE, ResizeHandle.NW):
-        h = max(min_h, start_h - dy)
-        y = start_y + (start_h - h)
-
-    return x, y, w, h
-
-
-class ResizeHandleItem(QGraphicsRectItem):
-    def __init__(
-        self,
-        handle: ResizeHandle,
-        canvas: DesignCanvas,
-        parent: NodeGraphicsItem,
-    ) -> None:
-        super().__init__(parent)
-        self._handle = handle
-        self._canvas = canvas
-        self.setRect(0, 0, HANDLE_SIZE, HANDLE_SIZE)
-        self.setBrush(QBrush(QColor(255, 255, 255)))
-        self.setPen(QPen(QColor(255, 120, 0), 1.5))
-        self.setAcceptHoverEvents(True)
-        self.setAcceptedMouseButtons(Qt.MouseButton.LeftButton)
-        self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsSelectable, False)
-        self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsMovable, False)
-        self.setFlag(QGraphicsRectItem.GraphicsItemFlag.ItemIsFocusable, True)
-        self.setZValue(10_000)
-        self.setCursor(_HANDLE_CURSORS[handle])
-        self._grabbing = False
-
-    def hoverEnterEvent(self, event) -> None:
-        self.setBrush(QBrush(QColor(255, 200, 120)))
-        super().hoverEnterEvent(event)
-
-    def hoverLeaveEvent(self, event) -> None:
-        self.setBrush(QBrush(QColor(255, 255, 255)))
-        super().hoverLeaveEvent(event)
-
-    def mousePressEvent(self, event) -> None:
-        parent = self.parentItem()
-        if isinstance(parent, NodeGraphicsItem):
-            self.grabMouse()
-            self._grabbing = True
-            self._canvas._begin_resize(parent.node_id, self._handle, event.scenePos())
-        event.accept()
-
-    def mouseMoveEvent(self, event) -> None:
-        if self._canvas._resize_active:
-            self._canvas._update_resize(event.scenePos())
-        event.accept()
-
-    def mouseReleaseEvent(self, event) -> None:
-        if self._grabbing:
-            self.ungrabMouse()
-            self._grabbing = False
-        if self._canvas._resize_active:
-            self._canvas._finish_resize()
-        event.accept()
+    min_w: float = 8.0,
+    min_h: float = 8.0,
+    keep_aspect: bool = False,
+) -> QRectF:
+    x0, y0, x1, y1 = start.left(), start.top(), start.right(), start.bottom()
+    if "w" in handle:
+        x0 = min(x0 + dx, x1 - min_w)
+    if "e" in handle:
+        x1 = max(x1 + dx, x0 + min_w)
+    if "n" in handle:
+        y0 = min(y0 + dy, y1 - min_h)
+    if "s" in handle:
+        y1 = max(y1 + dy, y0 + min_h)
+    rect = QRectF(QPointF(x0, y0), QPointF(x1, y1))
+    if keep_aspect and start.height() > 0 and len(handle) == 2:
+        ratio = start.width() / start.height()
+        w = max(rect.width(), rect.height() * ratio)
+        h = w / ratio
+        if "w" in handle:
+            rect.setLeft(x1 - w)
+        else:
+            rect.setRight(x0 + w)
+        if "n" in handle:
+            rect.setTop(y1 - h)
+        else:
+            rect.setBottom(y0 + h)
+    return rect

@@ -1,0 +1,591 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_forgot": {
+        "body": "print(\"Forgot password clicked\")",
+        "name": "on_forgot"
+      },
+      "on_login": {
+        "body": "print(\"Login attempt\")",
+        "name": "on_login"
+      },
+      "on_remember": {
+        "body": "print(\"Remember me toggled\")",
+        "name": "on_remember"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Email and password sign-in card with remember-me.",
+      "name": "Login Form",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "card": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 380.0,
+          "w": 340.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "card",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Card",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "email": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "email",
+        "layout": null,
+        "locked": false,
+        "name": "Email",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "Email address",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 2
+      },
+      "forgot": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_forgot"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "forgot",
+        "layout": null,
+        "locked": false,
+        "name": "Forgot",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "anchor": "center",
+          "image": "",
+          "justify": "left",
+          "text": "Forgot your password?",
+          "wrap_length": 0
+        },
+        "style": {
+          "cursor": "hand",
+          "foreground": "#6366f1",
+          "underline": true
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 6
+      },
+      "heading": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "heading",
+        "layout": null,
+        "locked": false,
+        "name": "Heading",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Welcome back",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "login_button": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_login"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "login_button",
+        "layout": null,
+        "locked": false,
+        "name": "Login Button",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Log in"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 5
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 480.0,
+          "w": 420.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "center",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 480,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Login Form",
+          "width": 420
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "password": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "submit": "on_login"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "password",
+        "layout": null,
+        "locked": false,
+        "name": "Password",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "Password",
+          "readonly": false,
+          "show": "*",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 3
+      },
+      "remember": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 140.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "toggle": "on_remember"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "remember",
+        "layout": null,
+        "locked": false,
+        "name": "Remember",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "checked": false,
+          "text": "Remember me"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "checkbox",
+        "visible": true,
+        "zIndex": 4
+      },
+      "subheading": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "subheading",
+        "layout": null,
+        "locked": false,
+        "name": "Subheading",
+        "page": 0,
+        "parentId": "card",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Sign in to continue",
+          "wrap_length": 0
+        },
+        "style": {
+          "foreground": "#71717a"
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 1
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f4f4f5",
+      "border": "#d4d4d8",
+      "borderWidth": 1,
+      "buttonRadius": 10,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#71717a",
+      "preset": "modern",
+      "primary": "#6366f1",
+      "primaryHover": "#4f46e5",
+      "surface": "#ffffff",
+      "text": "#18181b"
+    }
+  },
+  "template": {
+    "category": "Forms",
+    "description": "Email and password sign-in card with remember-me.",
+    "name": "Login Form",
+    "tags": [
+      "form",
+      "auth",
+      "flex"
+    ]
+  }
+}

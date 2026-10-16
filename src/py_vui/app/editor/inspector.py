@@ -1,613 +1,360 @@
+"""Right-hand properties panel: Properties / Style / Layout / Events for the selection."""
+
 from __future__ import annotations
 
+from collections.abc import Callable
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QTimer, Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QCheckBox,
     QComboBox,
     QFormLayout,
-    QGroupBox,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPlainTextEdit,
+    QListWidget,
     QPushButton,
-    QSpinBox,
+    QScrollArea,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
 
-from py_vui.app.editor.handler_snippets import HANDLER_SNIPPETS
-from py_vui.commands import ReplaceNode
-from py_vui.model.interaction import HandlerDef, default_handler_name
-from py_vui.model.nodes import (
-    ButtonNode,
-    CheckboxNode,
-    ComboBoxNode,
-    DialNode,
-    GroupBoxNode,
-    LabelNode,
-    LineEditNode,
-    ListWidgetNode,
-    Node,
-    RadioButtonNode,
-    SliderNode,
-    SpinBoxNode,
-    TableWidgetNode,
-    TextEditNode,
-    ToolButtonNode,
-    WindowNode,
-)
-from py_vui.model.theme import WidgetStyle, theme_for_preset
+from py_vui.app.editor.edit_context import EditContext
+from py_vui.app.editor.event_editor import EventsPage
+from py_vui.app.editor.layout_editor import LayoutPage
+from py_vui.app.editor.prop_editors import SplitterLabel
+from py_vui.app.editor.props_page import PropertiesPage
+from py_vui.commands import SetAttr, SetProjectAttr
+from py_vui.core.catalog import STYLE_PROPS
+from py_vui.core.registry import get_spec
+from py_vui.core.theme import PRESETS, theme_for_preset
 
 if TYPE_CHECKING:
-    from py_vui.commands.history import History
-    from py_vui.model.document import ProjectDocument
+    from py_vui.commands import History
+    from py_vui.core.document import ProjectDocument
 
 
-class PropertyInspector(QWidget):
-    document_changed = Signal()
-    document_dirty = Signal()
+def _scroll(widget: QWidget) -> QScrollArea:
+    sa = QScrollArea()
+    sa.setWidgetResizable(True)
+    sa.setFrameShape(QFrame.Shape.NoFrame)
+    sa.setWidget(widget)
+    sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    return sa
 
-    def __init__(self, parent=None) -> None:
+
+class ProjectSummary(QWidget):
+    """Shown when nothing is selected: project facts, theme quick-switch, diagnostics."""
+
+    changed = Signal()
+
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._doc: ProjectDocument | None = None
         self._history: History | None = None
-        self._node_id: str | None = None
-        self._block = False
-        self._apply_timer = QTimer(self)
-        self._apply_timer.setSingleShot(True)
-        self._apply_timer.setInterval(250)
-        self._apply_timer.timeout.connect(self._apply)
+        lay = QVBoxLayout(self)
+        lay.setContentsMargins(8, 8, 8, 8)
+        lay.addWidget(SplitterLabel("Project"))
+        form = QFormLayout()
+        self.name = QLineEdit()
+        self.name.textEdited.connect(self._rename)
+        self.theme = QComboBox()
+        for p in PRESETS:
+            self.theme.addItem(p.title(), p)
+        self.theme.activated.connect(self._theme_picked)
+        self.framework = QLabel()
+        self.counts = QLabel()
+        change = QPushButton("Change…")
+        change.setAutoDefault(False)
+        change.clicked.connect(self._change_framework)
+        fw = QHBoxLayout()
+        fw.addWidget(self.framework, 1)
+        fw.addWidget(change)
+        form.addRow("Name", self.name)
+        form.addRow("Theme", self.theme)
+        form.addRow("Framework", fw)
+        form.addRow("Content", self.counts)
+        lay.addLayout(form)
+        lay.addWidget(SplitterLabel("Diagnostics"))
+        self.diag = QListWidget()
+        lay.addWidget(self.diag, 1)
+        hint = QLabel("Select a widget on the canvas to edit its properties.")
+        hint.setWordWrap(True)
+        hint.setEnabled(False)
+        lay.addWidget(hint)
 
-        layout = QVBoxLayout(self)
+    def bind(self, doc: ProjectDocument | None, history: History | None) -> None:
+        self._doc, self._history = doc, history
+        self.refresh()
 
-        project = QGroupBox("Project")
-        pf = QFormLayout(project)
-        self._project_name = QLineEdit()
-        self._project_name.editingFinished.connect(self._apply_project_name)
-        self._theme_preset = QComboBox()
-        for preset in ("light", "dark", "modern", "ocean"):
-            self._theme_preset.addItem(preset.title(), preset)
-        self._theme_preset.currentIndexChanged.connect(self._apply_theme_preset)
-        pf.addRow("Project name", self._project_name)
-        pf.addRow("Theme", self._theme_preset)
-        layout.addWidget(project)
+    def refresh(self) -> None:
+        self.diag.clear()
+        if self._doc is None:
+            return
+        p = self._doc.project
+        if self.name.text() != p.meta.name:
+            self.name.setText(p.meta.name)
+        i = self.theme.findData(p.theme.preset)
+        self.theme.setCurrentIndex(max(i, 0))
+        self.framework.setText(p.framework)
+        wins = len(self._doc.windows())
+        self.counts.setText(
+            f"{len(p.nodes)} widgets, {wins} window(s), {len(p.handlers)} handler(s)")
+        diags = self._doc.diagnostics()
+        if not diags:
+            self.diag.addItem("No problems found.")
+        for d in diags:
+            self.diag.addItem(f"{d.level}: {d.message}")
 
-        common = QGroupBox("Layout")
-        cf = QFormLayout(common)
-        self._name = QLineEdit()
-        self._name.editingFinished.connect(self._apply)
-        self._enabled = QCheckBox("Enabled")
-        self._enabled.stateChanged.connect(self._apply)
-        self._x = QSpinBox()
-        self._x.setRange(-9999, 9999)
-        self._y = QSpinBox()
-        self._y.setRange(-9999, 9999)
-        self._w = QSpinBox()
-        self._w.setRange(1, 9999)
-        self._h = QSpinBox()
-        self._h.setRange(1, 9999)
-        for spin in (self._x, self._y, self._w, self._h):
-            spin.editingFinished.connect(self._apply)
-        self._tooltip = QLineEdit()
-        self._tooltip.editingFinished.connect(self._apply)
-        cf.addRow("Widget name", self._name)
-        cf.addRow("Tooltip", self._tooltip)
-        cf.addRow("", self._enabled)
-        cf.addRow("X", self._x)
-        cf.addRow("Y", self._y)
-        cf.addRow("W", self._w)
-        cf.addRow("H", self._h)
-        layout.addWidget(common)
+    def _rename(self, text: str) -> None:
+        if self._doc is None or self._history is None or not text.strip():
+            return
+        meta = self._doc.project.meta.model_copy(update={"name": text})
+        self._history.push(self._doc, SetProjectAttr("meta", meta, label="Rename project"))
+        self.changed.emit()
 
-        props = QGroupBox("Content")
-        prop_form = QFormLayout(props)
-        self._text = QLineEdit()
-        self._text.editingFinished.connect(self._apply)
-        self._placeholder = QLineEdit()
-        self._placeholder.editingFinished.connect(self._apply)
-        self._checked = QCheckBox()
-        self._checked.stateChanged.connect(self._apply)
-        prop_form.addRow("Text / title", self._text)
-        prop_form.addRow("Placeholder", self._placeholder)
-        prop_form.addRow("Checked", self._checked)
-        self._combo_items = QLineEdit()
-        self._combo_items.setPlaceholderText("Option 1, Option 2, …")
-        self._combo_items.editingFinished.connect(self._apply)
-        prop_form.addRow("Combo items", self._combo_items)
-        self._list_items = QLineEdit()
-        self._list_items.setPlaceholderText("Item 1, Item 2, …")
-        self._list_items.editingFinished.connect(self._apply)
-        prop_form.addRow("List items", self._list_items)
-        self._spin_min = QSpinBox()
-        self._spin_min.setRange(-99999, 99999)
-        self._spin_min.editingFinished.connect(self._apply)
-        self._spin_max = QSpinBox()
-        self._spin_max.setRange(-99999, 99999)
-        self._spin_max.setValue(100)
-        self._spin_max.editingFinished.connect(self._apply)
-        self._spin_value = QSpinBox()
-        self._spin_value.setRange(-99999, 99999)
-        self._spin_value.editingFinished.connect(self._apply)
-        prop_form.addRow("Min", self._spin_min)
-        prop_form.addRow("Max", self._spin_max)
-        prop_form.addRow("Value", self._spin_value)
-        self._table_rows = QSpinBox()
-        self._table_rows.setRange(1, 999)
-        self._table_rows.setValue(3)
-        self._table_rows.editingFinished.connect(self._apply)
-        self._table_cols = QSpinBox()
-        self._table_cols.setRange(1, 999)
-        self._table_cols.setValue(3)
-        self._table_cols.editingFinished.connect(self._apply)
-        prop_form.addRow("Rows", self._table_rows)
-        prop_form.addRow("Columns", self._table_cols)
-        layout.addWidget(props)
+    def _theme_picked(self, _index: int) -> None:
+        if self._doc is None or self._history is None:
+            return
+        preset = self.theme.currentData()
+        cmd = SetProjectAttr("theme", theme_for_preset(preset), label=f"Theme: {preset}")
+        cmd.merge_key = None
+        self._history.push(self._doc, cmd)
+        self.changed.emit()
+        self.refresh()
 
-        appearance = QGroupBox("Appearance")
-        af = QFormLayout(appearance)
-        self._bg = QLineEdit()
-        self._bg.setPlaceholderText("e.g. #2563eb (empty = theme)")
-        self._bg.editingFinished.connect(self._apply)
-        self._bg.textChanged.connect(self._schedule_apply)
-        self._fg = QLineEdit()
-        self._fg.setPlaceholderText("text color")
-        self._fg.editingFinished.connect(self._apply)
-        self._fg.textChanged.connect(self._schedule_apply)
-        self._font_size = QSpinBox()
-        self._font_size.setRange(0, 48)
-        self._font_size.setSpecialValueText("theme")
-        self._font_size.valueChanged.connect(self._schedule_apply)
-        self._radius = QSpinBox()
-        self._radius.setRange(0, 32)
-        self._radius.setSpecialValueText("theme")
-        self._radius.valueChanged.connect(self._schedule_apply)
-        af.addRow("Background", self._bg)
-        af.addRow("Foreground", self._fg)
-        af.addRow("Font size", self._font_size)
-        af.addRow("Corner radius", self._radius)
-        layout.addWidget(appearance)
+    def _change_framework(self) -> None:
+        if self._doc is None or self._history is None:
+            return
+        from py_vui.app.editor.dialogs import FrameworkDialog
 
-        self._interaction_group = QGroupBox("Actions")
-        interaction_layout = QVBoxLayout(self._interaction_group)
-        handler_row = QHBoxLayout()
-        self._handler_name = QComboBox()
-        self._handler_name.setEditable(True)
-        self._handler_name.currentTextChanged.connect(self._on_handler_name_changed)
-        self._new_handler_btn = QPushButton("New")
-        self._new_handler_btn.clicked.connect(self._create_handler_from_widget)
-        handler_row.addWidget(self._handler_name, stretch=1)
-        handler_row.addWidget(self._new_handler_btn)
-        interaction_layout.addWidget(QLabel("Handler function:"))
-        interaction_layout.addLayout(handler_row)
-        self._snippet = QComboBox()
-        self._snippet.addItem("Insert snippet…", "")
-        for title in HANDLER_SNIPPETS:
-            self._snippet.addItem(title, title)
-        self._snippet.currentIndexChanged.connect(self._insert_snippet)
-        interaction_layout.addWidget(self._snippet)
-        self._handler_body = QPlainTextEdit()
-        self._handler_body.setPlaceholderText(
-            'Python statements, e.g.\nprint("Hello!")\n'
-            "dialog = QMessageBox.information(None, 'Hi', 'Clicked')"
-        )
-        self._handler_body.setMinimumHeight(100)
-        self._apply_handler_btn = QPushButton("Apply handler code")
-        self._apply_handler_btn.clicked.connect(self._apply_handler_body)
-        interaction_layout.addWidget(self._handler_body)
-        interaction_layout.addWidget(self._apply_handler_btn)
-        layout.addWidget(self._interaction_group)
-        layout.addStretch()
+        if FrameworkDialog(self._doc, self._history, self).exec():
+            self.changed.emit()
+            self.refresh()
 
+
+class InspectorPanel(QWidget):
+    changed = Signal()
+    handler_requested = Signal(str)
+
+    #: set by the main window to ``ProjectService.add_asset`` so picked files are copied in
+    asset_importer: Callable[[Path], str] | None = None
+
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self._doc: ProjectDocument | None = None
+        self._history: History | None = None
+        self._ids: list[str] = []
+        self._sig: tuple | None = None
+        self._ctx: EditContext | None = None
+        self._pages: list[QWidget] = []
+        self.props_page: PropertiesPage | None = None
+        self.style_page: PropertiesPage | None = None
+        self.layout_page: LayoutPage | None = None
+        self.events_page: EventsPage | None = None
+        self.project_dir: Path | None = None
+
+        root = QVBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+
+        self.header = QWidget()
+        hl = QVBoxLayout(self.header)
+        hl.setContentsMargins(8, 8, 8, 4)
+        top = QHBoxLayout()
+        self.icon = QLabel()
+        f = self.icon.font()
+        f.setPointSize(f.pointSize() + 4)
+        self.icon.setFont(f)
+        self.type_label = QLabel()
+        bold = self.type_label.font()
+        bold.setBold(True)
+        self.type_label.setFont(bold)
+        top.addWidget(self.icon)
+        top.addWidget(self.type_label, 1)
+        hl.addLayout(top)
+        self.name_edit = QLineEdit()
+        self.name_edit.setPlaceholderText("Widget name")
+        self.name_edit.editingFinished.connect(self.commit_name)
+        hl.addWidget(self.name_edit)
+        root.addWidget(self.header)
+
+        self.tabs = QTabWidget()
+        self.summary = ProjectSummary()
+        self.summary.changed.connect(self.changed)
+        root.addWidget(self.tabs, 1)
+        root.addWidget(self.summary, 1)
+        self._show_summary(True)
+
+    # ------------------------------------------------------------- public API
     def bind(self, doc: ProjectDocument, history: History) -> None:
-        self._doc = doc
-        self._history = history
-        self._refresh_project_fields()
+        self._doc, self._history = doc, history
+        self._ids = []
+        self._sig = None
+        self.summary.bind(doc, history)
+        self.set_selection([])
 
-    def _refresh_project_fields(self) -> None:
+    def set_selection(self, ids: list[str]) -> None:
+        self._ids = list(ids)
+        self._rebuild(force=False)
+
+    def refresh(self) -> None:
+        self._rebuild(force=False)
+
+    # ------------------------------------------------------------- internals
+    def _show_summary(self, on: bool) -> None:
+        self.summary.setVisible(on)
+        self.tabs.setVisible(not on)
+        self.header.setVisible(not on)
+
+    def _live_ids(self) -> list[str]:
         if self._doc is None:
-            return
-        self._project_name.blockSignals(True)
-        self._theme_preset.blockSignals(True)
-        self._project_name.setText(self._doc.project.meta.name)
-        idx = self._theme_preset.findData(self._doc.project.theme.preset)
-        if idx >= 0:
-            self._theme_preset.setCurrentIndex(idx)
-        self._project_name.blockSignals(False)
-        self._theme_preset.blockSignals(False)
+            return []
+        return [i for i in self._ids if i in self._doc.project.nodes]
 
-    def _apply_project_name(self) -> None:
-        if self._block or self._doc is None:
-            return
-        new_name = self._project_name.text().strip() or "untitled"
-        if new_name == self._doc.project.meta.name:
-            return
-        self._doc.project.meta.name = new_name
-        self.document_dirty.emit()
-
-    def _apply_theme_preset(self) -> None:
-        if self._block or self._doc is None:
-            return
-        preset = self._theme_preset.currentData()
-        if not preset:
-            return
-        self._doc.project.theme = theme_for_preset(preset)
-        self.document_changed.emit()
-
-    def _refresh_handler_list(self, *, select: str | None = None) -> None:
-        if self._doc is None:
-            return
-        self._handler_name.blockSignals(True)
-        current = select or self._handler_name.currentText()
-        self._handler_name.clear()
-        self._handler_name.addItem("(none)", "")
-        for name in sorted(self._doc.project.handlers):
-            self._handler_name.addItem(name, name)
-        idx = self._handler_name.findData(current)
-        if idx >= 0:
-            self._handler_name.setCurrentIndex(idx)
-        elif current:
-            self._handler_name.setEditText(current)
-        self._handler_name.blockSignals(False)
-
-    def _current_handler_name(self) -> str | None:
-        text = self._handler_name.currentText().strip()
-        if not text or text == "(none)":
-            return None
-        return text
-
-    def _load_handler_body(self, name: str | None) -> None:
-        self._handler_body.blockSignals(True)
-        if not name or self._doc is None:
-            self._handler_body.clear()
-        else:
-            handler = self._doc.project.handlers.get(name)
-            self._handler_body.setPlainText(handler.body if handler else "")
-        self._handler_body.blockSignals(False)
-
-    def _on_handler_name_changed(self) -> None:
-        if self._block:
-            return
-        name = self._current_handler_name()
-        self._load_handler_body(name)
-        self._apply_handler_binding()
-
-    def _insert_snippet(self) -> None:
-        if self._block:
-            return
-        title = self._snippet.currentData()
-        if not title:
-            return
-        body = HANDLER_SNIPPETS.get(str(title), "")
-        if body:
-            self._handler_body.setPlainText(body)
-        self._snippet.setCurrentIndex(0)
-
-    def _create_handler_from_widget(self) -> None:
-        if self._block or self._doc is None or not self._node_id:
-            return
-        node = self._doc.get_node(self._node_id)
-        name = default_handler_name(node.name)
-        if name not in self._doc.project.handlers:
-            self._doc.project.handlers[name] = HandlerDef(
-                name=name,
-                body='print("clicked")',
-            )
-        self._refresh_handler_list(select=name)
-        self._load_handler_body(name)
-        self._apply_handler_binding(force_name=name)
-        self.document_changed.emit()
-
-    def _apply_handler_body(self) -> None:
-        if self._block or self._doc is None:
-            return
-        name = self._current_handler_name()
-        if not name:
-            return
-        body = self._handler_body.toPlainText().strip() or "pass"
-        self._doc.project.handlers[name] = HandlerDef(name=name, body=body)
-        self._refresh_handler_list(select=name)
-        self.document_dirty.emit()
-
-    def _apply_handler_binding(self, *, force_name: str | None = None) -> None:
-        if self._block or not self._node_id or self._doc is None or self._history is None:
-            return
-        node = self._doc.get_node(self._node_id)
-        handler = force_name if force_name is not None else self._current_handler_name()
-        before = node
-        data = node.model_dump()
-        if isinstance(node, (ButtonNode, ToolButtonNode)):
-            data["props"]["onClick"] = handler
-        elif isinstance(node, LineEditNode):
-            data["props"]["onReturn"] = handler
-        elif isinstance(node, (CheckboxNode, RadioButtonNode)):
-            data["props"]["onToggle"] = handler
-        elif isinstance(node, TextEditNode):
-            data["props"]["onChange"] = handler
-        else:
-            return
-        after = node.__class__.model_validate(data)
-        if after.model_dump() == before.model_dump():
-            return
-        if handler and handler not in self._doc.project.handlers:
-            self._doc.project.handlers[handler] = HandlerDef(
-                name=handler,
-                body=self._handler_body.toPlainText().strip() or "pass",
-            )
-        self._history.push(self._doc, ReplaceNode(before=before, after=after))
-        self.document_changed.emit()
-
-    def show_node(self, node_id: str | None) -> None:
-        self._node_id = node_id
-        self._refresh_project_fields()
-        self._refresh_handler_list()
-        if not node_id or self._doc is None:
-            self.setEnabled(False)
-            return
-        self.setEnabled(True)
-        node = self._doc.get_node(node_id)
-        box = node.layout.box
-        if isinstance(node, WindowNode):
-            display_w = int(node.props.width)
-            display_h = int(node.props.height)
-        else:
-            display_w = int(box.w)
-            display_h = int(box.h)
-
-        self._block = True
-        self._tooltip.blockSignals(True)
-        self._tooltip.setText(node.tooltip)
-        self._tooltip.blockSignals(False)
-        for widget, value in (
-            (self._name, node.name),
-            (self._x, int(box.x)),
-            (self._y, int(box.y)),
-            (self._w, display_w),
-            (self._h, display_h),
-        ):
-            widget.blockSignals(True)
-            if isinstance(widget, QLineEdit):
-                widget.setText(str(value))
-            else:
-                widget.setValue(value)
-            widget.blockSignals(False)
-
-        self._enabled.blockSignals(True)
-        self._enabled.setChecked(node.enabled)
-        self._enabled.blockSignals(False)
-
-        self._text.setVisible(
-            isinstance(
-                node,
-                (
-                    WindowNode,
-                    LabelNode,
-                    ButtonNode,
-                    ToolButtonNode,
-                    LineEditNode,
-                    CheckboxNode,
-                    RadioButtonNode,
-                    TextEditNode,
-                    GroupBoxNode,
-                ),
-            )
-        )
-        self._placeholder.setVisible(isinstance(node, (LineEditNode, TextEditNode)))
-        self._checked.setVisible(isinstance(node, (CheckboxNode, RadioButtonNode)))
-        self._combo_items.setVisible(isinstance(node, ComboBoxNode))
-        self._list_items.setVisible(isinstance(node, ListWidgetNode))
-        is_range_node = isinstance(node, (SpinBoxNode, SliderNode, DialNode))
-        self._spin_min.setVisible(is_range_node)
-        self._spin_max.setVisible(is_range_node)
-        self._spin_value.setVisible(is_range_node)
-        is_table = isinstance(node, TableWidgetNode)
-        self._table_rows.setVisible(is_table)
-        self._table_cols.setVisible(is_table)
-        has_action = isinstance(
-            node,
-            (
-                ButtonNode,
-                ToolButtonNode,
-                LineEditNode,
-                CheckboxNode,
-                RadioButtonNode,
-                TextEditNode,
-            ),
-        )
-        self._interaction_group.setVisible(has_action)
-        for w in (
-            self._handler_name,
-            self._new_handler_btn,
-            self._handler_body,
-            self._apply_handler_btn,
-        ):
-            w.setVisible(has_action)
-
-        for w in (
-            self._text,
-            self._placeholder,
-            self._checked,
-            self._combo_items,
-            self._list_items,
-            self._spin_min,
-            self._spin_max,
-            self._spin_value,
-            self._table_rows,
-            self._table_cols,
-        ):
-            w.blockSignals(True)
-
-        if isinstance(node, WindowNode):
-            self._text.setText(node.props.title)
-        elif isinstance(node, LabelNode):
-            self._text.setText(node.props.text)
-        elif isinstance(node, (ButtonNode, ToolButtonNode)):
-            self._text.setText(node.props.text)
-        elif isinstance(node, LineEditNode):
-            self._text.setText(node.props.text)
-            self._placeholder.setText(node.props.placeholder)
-        elif isinstance(node, CheckboxNode):
-            self._text.setText(node.props.text)
-            self._checked.setChecked(node.props.checked)
-        elif isinstance(node, RadioButtonNode):
-            self._text.setText(node.props.text)
-            self._checked.setChecked(node.props.checked)
-        elif isinstance(node, TextEditNode):
-            self._text.setText(node.props.text)
-            self._placeholder.setText(node.props.placeholder)
-        elif isinstance(node, ComboBoxNode):
-            self._combo_items.setText(", ".join(node.props.items))
-        elif isinstance(node, ListWidgetNode):
-            self._list_items.setText(", ".join(node.props.items))
-        elif isinstance(node, (SpinBoxNode, DialNode)):
-            self._spin_min.setValue(node.props.min)
-            self._spin_max.setValue(node.props.max)
-            self._spin_value.setValue(node.props.value)
-        elif isinstance(node, SliderNode):
-            self._spin_min.setValue(node.props.min)
-            self._spin_max.setValue(node.props.max)
-            self._spin_value.setValue(node.props.value)
-        elif isinstance(node, GroupBoxNode):
-            self._text.setText(node.props.title)
-        elif isinstance(node, TableWidgetNode):
-            self._table_rows.setValue(node.props.rows)
-            self._table_cols.setValue(node.props.columns)
-        else:
-            self._text.clear()
-
-        for w in (
-            self._text,
-            self._placeholder,
-            self._checked,
-            self._combo_items,
-            self._list_items,
-            self._spin_min,
-            self._spin_max,
-            self._spin_value,
-            self._table_rows,
-            self._table_cols,
-        ):
-            w.blockSignals(False)
-
-        style = node.style or WidgetStyle()
-        self._bg.blockSignals(True)
-        self._fg.blockSignals(True)
-        self._font_size.blockSignals(True)
-        self._radius.blockSignals(True)
-        self._bg.setText(style.background or "")
-        self._fg.setText(style.foreground or "")
-        self._font_size.setValue(style.font_size or 0)
-        self._radius.setValue(style.border_radius if style.border_radius is not None else 0)
-        self._bg.blockSignals(False)
-        self._fg.blockSignals(False)
-        self._font_size.blockSignals(False)
-        self._radius.blockSignals(False)
-
-        handler: str | None = None
-        if isinstance(node, (ButtonNode, ToolButtonNode)):
-            handler = node.props.on_click
-        elif isinstance(node, LineEditNode):
-            handler = node.props.on_return
-        elif isinstance(node, (CheckboxNode, RadioButtonNode)):
-            handler = node.props.on_toggle
-        elif isinstance(node, TextEditNode):
-            handler = node.props.on_change
-        self._refresh_handler_list(select=handler or "")
-        self._load_handler_body(handler)
-
-        self._block = False
-
-    def _schedule_apply(self) -> None:
-        if self._block:
-            return
-        self._apply_timer.start()
-
-    def _apply(self) -> None:
-        if self._block or not self._node_id or self._doc is None or self._history is None:
-            return
-        before = self._doc.get_node(self._node_id)
-        after = self._clone_with_edits(before)
-        if after.model_dump(mode="json") == before.model_dump(mode="json"):
-            return
-        self._history.push(self._doc, ReplaceNode(before=before, after=after))
-        self.document_changed.emit()
-
-    def _normalize_color(self, value: str) -> str | None:
-        raw = value.strip()
-        if not raw:
-            return None
-        if not raw.startswith("#"):
-            raw = f"#{raw}"
-        return raw
-
-    def _parse_style(self) -> WidgetStyle | None:
-        bg = self._normalize_color(self._bg.text())
-        fg = self._normalize_color(self._fg.text())
-        fs = self._font_size.value()
-        radius = self._radius.value()
-        if not any((bg, fg, fs, radius)):
-            return None
-        return WidgetStyle(
-            background=bg,
-            foreground=fg,
-            font_size=fs if fs > 0 else None,
-            border_radius=radius if radius > 0 else None,
+    def _signature(self, ids: list[str]) -> tuple:
+        assert self._doc is not None
+        return (
+            tuple(ids),
+            tuple(self._doc.project.nodes[i].type for i in ids),
+            self._doc.project.framework,
         )
 
-    def _clone_with_edits(self, node: Node) -> Node:
-        data = node.model_dump()
-        data["name"] = self._name.text()
-        data["tooltip"] = self._tooltip.text()
-        data["enabled"] = self._enabled.isChecked()
-        data["style"] = self._parse_style()
-        data["layout"]["box"]["x"] = float(self._x.value())
-        data["layout"]["box"]["y"] = float(self._y.value())
-        data["layout"]["box"]["w"] = float(self._w.value())
-        data["layout"]["box"]["h"] = float(self._h.value())
+    def _rebuild(self, *, force: bool) -> None:
+        if self._doc is None or self._history is None:
+            self._show_summary(True)
+            return
+        ids = self._live_ids()
+        if not ids:
+            self._clear_tabs()
+            self._sig = None
+            self._show_summary(True)
+            self.summary.refresh()
+            return
+        sig = self._signature(ids)
+        if force or sig != self._sig:
+            self._sig = sig
+            self._build_tabs(ids)
+        else:
+            self._refresh_pages()
+        self._refresh_header()
+        self._show_summary(False)
 
-        if isinstance(node, WindowNode):
-            data["props"]["title"] = self._text.text()
-            w = float(self._w.value())
-            h = float(self._h.value())
-            data["props"]["width"] = w
-            data["props"]["height"] = h
-            data["layout"]["box"]["w"] = w
-            data["layout"]["box"]["h"] = h
-        elif isinstance(
-            node,
-            (
-                LabelNode,
-                ButtonNode,
-                ToolButtonNode,
-                LineEditNode,
-                CheckboxNode,
-                RadioButtonNode,
-            ),
-        ):
-            data["props"]["text"] = self._text.text()
-        elif isinstance(node, GroupBoxNode):
-            data["props"]["title"] = self._text.text()
-        elif isinstance(node, TextEditNode):
-            data["props"]["text"] = self._text.text()
+    def _clear_tabs(self) -> None:
+        current = self.tabs.currentIndex()
+        self._last_tab = current if current >= 0 else getattr(self, "_last_tab", 0)
+        while self.tabs.count():
+            w = self.tabs.widget(0)
+            self.tabs.removeTab(0)
+            w.deleteLater()
+        self._pages = []
+        self.props_page = self.style_page = self.layout_page = self.events_page = None
 
-        if isinstance(node, (CheckboxNode, RadioButtonNode)):
-            data["props"]["checked"] = self._checked.isChecked()
-        if isinstance(node, (LineEditNode, TextEditNode)):
-            data["props"]["placeholder"] = self._placeholder.text()
-        if isinstance(node, ComboBoxNode):
-            raw = [p.strip() for p in self._combo_items.text().split(",") if p.strip()]
-            data["props"]["items"] = raw or ["Option 1"]
-        if isinstance(node, ListWidgetNode):
-            raw = [p.strip() for p in self._list_items.text().split(",") if p.strip()]
-            data["props"]["items"] = raw or ["Item 1"]
-        if isinstance(node, (SpinBoxNode, DialNode, SliderNode)):
-            data["props"]["min"] = self._spin_min.value()
-            data["props"]["max"] = self._spin_max.value()
-            data["props"]["value"] = self._spin_value.value()
-        if isinstance(node, TableWidgetNode):
-            data["props"]["rows"] = self._table_rows.value()
-            data["props"]["columns"] = self._table_cols.value()
+    def _build_tabs(self, ids: list[str]) -> None:
+        assert self._doc is not None
+        self._clear_tabs()
+        ctx = EditContext(
+            self._doc, self._history, ids,  # type: ignore[arg-type]
+            on_change=self._on_edit,
+            asset_importer=self._import_asset,
+            project_dir=self.project_dir,
+        )
+        self._ctx = ctx
+        nodes = ctx.nodes
+        types = {n.type for n in nodes}
+        same = len(types) == 1
+        spec = get_spec(nodes[0].type)
+        wanted: list[tuple[str, QWidget]] = []
+        if same and spec.props:
+            hidden = frozenset({"menus"}) if spec.type == "window" else frozenset()
+            self.props_page = PropertiesPage(ctx, spec.props, "props", hidden=hidden)
+            holder = QWidget()
+            hv = QVBoxLayout(holder)
+            hv.setContentsMargins(0, 0, 0, 0)
+            hv.addWidget(self.props_page)
+            if spec.type == "window" and len(nodes) == 1:
+                btn = QPushButton("Edit menus…")
+                btn.setAutoDefault(False)
+                btn.clicked.connect(self.edit_menus)
+                self.menus_button = btn
+                hv.insertWidget(0, btn)
+            wanted.append(("Properties", holder))
+        self.style_page = PropertiesPage(ctx, STYLE_PROPS, "style")
+        wanted.append(("Style", self.style_page))
+        self.layout_page = LayoutPage(ctx)
+        wanted.append(("Layout", self.layout_page))
+        events = EventsPage(ctx)
+        if events._events_for():
+            events.handler_requested.connect(self.handler_requested)
+            self.events_page = events
+            wanted.append(("Events", events))
+        else:
+            events.deleteLater()
+        for title, page in wanted:
+            self.tabs.addTab(_scroll(page), title)
+            self._pages.append(page)
+        idx = min(getattr(self, "_last_tab", 0), self.tabs.count() - 1)
+        self.tabs.setCurrentIndex(max(idx, 0))
 
-        return node.__class__.model_validate(data)
+    def _refresh_pages(self) -> None:
+        for p in (self.props_page, self.style_page, self.layout_page, self.events_page):
+            if p is not None:
+                p.refresh()
+
+    def _refresh_header(self) -> None:
+        ids = self._live_ids()
+        assert self._doc is not None
+        nodes = [self._doc.project.nodes[i] for i in ids]
+        if len(nodes) == 1:
+            spec = get_spec(nodes[0].type)
+            self.icon.setText(spec.icon)
+            self.type_label.setText(spec.label)
+            self.name_edit.setEnabled(True)
+            if not self.name_edit.hasFocus() and self.name_edit.text() != nodes[0].name:
+                self.name_edit.setText(nodes[0].name)
+        else:
+            types = {n.type for n in nodes}
+            self.icon.setText("▦")
+            self.type_label.setText(
+                f"{len(nodes)} widgets" + (f" ({get_spec(next(iter(types))).label})"
+                                          if len(types) == 1 else " (mixed)"))
+            self.name_edit.setEnabled(False)
+            self.name_edit.setText("")
+
+    def _import_asset(self, path: Path) -> str:
+        if self.asset_importer is None:
+            return str(path)
+        return self.asset_importer(path)
+
+    def _on_edit(self) -> None:
+        self._refresh_pages()
+        self._refresh_header()
+        self.changed.emit()
+
+    # ------------------------------------------------------------- actions
+    def commit_name(self) -> None:
+        """Apply the header name field as a SetAttr, made unique within the document."""
+        if self._doc is None or self._history is None or len(self._live_ids()) != 1:
+            return
+        nid = self._live_ids()[0]
+        node = self._doc.project.nodes[nid]
+        text = self.name_edit.text().strip()
+        if not text or text == node.name:
+            self.name_edit.setText(node.name)
+            return
+        unique = self._doc.unique_name(text, exclude=nid)
+        self._history.push(self._doc, SetAttr(nid, "name", unique, label="Rename widget"))
+        self.name_edit.setText(unique)
+        self.changed.emit()
+
+    def edit_menus(self) -> None:
+        if self._doc is None or self._history is None or len(self._live_ids()) != 1:
+            return
+        from py_vui.app.editor.dialogs import MenuDesignerDialog
+
+        dlg = MenuDesignerDialog(self._doc, self._history, self._live_ids()[0], self)
+        if dlg.exec():
+            self._on_edit()

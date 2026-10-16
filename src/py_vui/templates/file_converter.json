@@ -1,0 +1,742 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_browse": {
+        "body": "print(\"on_browse\")",
+        "name": "on_browse"
+      },
+      "on_convert": {
+        "body": "print(\"on_convert\")",
+        "name": "on_convert"
+      },
+      "on_format_change": {
+        "body": "print(\"on_format_change\")",
+        "name": "on_format_change"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Grid-based form: pick a file, format and quality.",
+      "name": "File Converter",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "browse": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_browse"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "browse",
+        "layout": null,
+        "locked": false,
+        "name": "Browse",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Browse..."
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      },
+      "convert": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_convert"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "convert",
+        "layout": null,
+        "locked": false,
+        "name": "Convert",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Convert"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 9
+      },
+      "form": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "form",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            0,
+            1,
+            0
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "grid",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Form",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "format": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 160.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {
+          "change": "on_format_change"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "format",
+        "layout": null,
+        "locked": false,
+        "name": "Format",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "current": 0,
+          "editable": false,
+          "items": [
+            "PNG",
+            "JPEG",
+            "WEBP",
+            "PDF"
+          ]
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "combobox",
+        "visible": true,
+        "zIndex": 4
+      },
+      "format_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "format_label",
+        "layout": null,
+        "locked": false,
+        "name": "Format Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Output format",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 3
+      },
+      "input_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 90.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "input_label",
+        "layout": null,
+        "locked": false,
+        "name": "Input Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Input file",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "input_path": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "input_path",
+        "layout": null,
+        "locked": false,
+        "name": "Input Path",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "Choose a file...",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 1
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 360.0,
+          "w": 560.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 360,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "File Converter",
+          "width": 560
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "overwrite": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 220.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "overwrite",
+        "layout": null,
+        "locked": false,
+        "name": "Overwrite",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "checked": false,
+          "text": "Overwrite existing files"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "checkbox",
+        "visible": true,
+        "zIndex": 7
+      },
+      "progress": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 18.0,
+          "w": 200.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 2,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "progress",
+        "layout": null,
+        "locked": false,
+        "name": "Progress",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "maximum": 100,
+          "mode": "determinate",
+          "orientation": "horizontal",
+          "show_text": false,
+          "value": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "progressbar",
+        "visible": true,
+        "zIndex": 8
+      },
+      "quality": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 200.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "quality",
+        "layout": null,
+        "locked": false,
+        "name": "Quality",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "maximum": 100,
+          "minimum": 1,
+          "orientation": "horizontal",
+          "show_value": true,
+          "step": 1,
+          "value": 80
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "slider",
+        "visible": true,
+        "zIndex": 6
+      },
+      "quality_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "quality_label",
+        "layout": null,
+        "locked": false,
+        "name": "Quality Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Quality",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 5
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#fff7ed",
+      "border": "#fed7aa",
+      "borderWidth": 1,
+      "buttonRadius": 12,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#9a3412",
+      "preset": "sunset",
+      "primary": "#ea580c",
+      "primaryHover": "#c2410c",
+      "surface": "#ffffff",
+      "text": "#431407"
+    }
+  },
+  "template": {
+    "category": "Utilities",
+    "description": "Grid-based form: pick a file, format and quality.",
+    "name": "File Converter",
+    "tags": [
+      "grid",
+      "form"
+    ]
+  }
+}

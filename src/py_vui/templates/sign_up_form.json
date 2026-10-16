@@ -1,0 +1,913 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_cancel": {
+        "body": "print(\"Sign-up cancelled\")",
+        "name": "on_cancel"
+      },
+      "on_create": {
+        "body": "print(\"Create account\")",
+        "name": "on_create"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Account registration with grid-aligned fields.",
+      "name": "Sign-up Form",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "buttons": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 44.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 2,
+          "row": 6,
+          "rowSpan": 1,
+          "sticky": "e"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "buttons",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "end",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Buttons",
+        "page": 0,
+        "parentId": "form",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 10
+      },
+      "cancel": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 90.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_cancel"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "cancel",
+        "layout": null,
+        "locked": false,
+        "name": "Cancel",
+        "page": 0,
+        "parentId": "buttons",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Cancel"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 0
+      },
+      "confirm_password": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "confirm_password",
+        "layout": null,
+        "locked": false,
+        "name": "Confirm Password",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "*",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 8
+      },
+      "confirm_password_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 4,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "confirm_password_label",
+        "layout": null,
+        "locked": false,
+        "name": "Confirm Password Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Confirm",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 7
+      },
+      "create": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 130.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_create"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "create",
+        "layout": null,
+        "locked": false,
+        "name": "Create",
+        "page": 0,
+        "parentId": "buttons",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Create account"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "email": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "email",
+        "layout": null,
+        "locked": false,
+        "name": "Email",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 4
+      },
+      "email_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 2,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "email_label",
+        "layout": null,
+        "locked": false,
+        "name": "Email Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Email",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 3
+      },
+      "form": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 440.0,
+          "w": 420.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "form",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            0,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "grid",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Form",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "full_name": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "full_name",
+        "layout": null,
+        "locked": false,
+        "name": "Full Name",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 2
+      },
+      "full_name_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "full_name_label",
+        "layout": null,
+        "locked": false,
+        "name": "Full Name Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Full name",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 1
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 520.0,
+          "w": 480.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "center",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 520,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Sign-up Form",
+          "width": 480
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "password": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "ew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "password",
+        "layout": null,
+        "locked": false,
+        "name": "Password",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "*",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 6
+      },
+      "password_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 3,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "password_label",
+        "layout": null,
+        "locked": false,
+        "name": "Password Label",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Password",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 5
+      },
+      "terms": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 300.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 2,
+          "row": 5,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "terms",
+        "layout": null,
+        "locked": false,
+        "name": "Terms",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "checked": false,
+          "text": "I agree to the terms and conditions"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "checkbox",
+        "visible": true,
+        "zIndex": 9
+      },
+      "title": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 2,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "w"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "title",
+        "layout": null,
+        "locked": false,
+        "name": "Title",
+        "page": 0,
+        "parentId": "form",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Create your account",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f4f4f5",
+      "border": "#d4d4d8",
+      "borderWidth": 1,
+      "buttonRadius": 10,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#71717a",
+      "preset": "modern",
+      "primary": "#6366f1",
+      "primaryHover": "#4f46e5",
+      "surface": "#ffffff",
+      "text": "#18181b"
+    }
+  },
+  "template": {
+    "category": "Forms",
+    "description": "Account registration with grid-aligned fields.",
+    "name": "Sign-up Form",
+    "tags": [
+      "form",
+      "auth",
+      "grid"
+    ]
+  }
+}

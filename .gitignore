@@ -13,3 +13,11 @@ wheels/
 generated/
 sessions/*/
 !sessions/README.md
+
+# Tooling / build output
+.ruff_cache/
+.pytest_cache/
+dist-bundle/
+.py_vui/
+*.autosave.json
+.DS_Store

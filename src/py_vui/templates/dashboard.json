@@ -1,0 +1,1346 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_nav_home": {
+        "body": "print(\"on_nav_home\")",
+        "name": "on_nav_home"
+      },
+      "on_nav_reports": {
+        "body": "print(\"on_nav_reports\")",
+        "name": "on_nav_reports"
+      },
+      "on_nav_users": {
+        "body": "print(\"on_nav_users\")",
+        "name": "on_nav_users"
+      },
+      "on_refresh": {
+        "body": "print(\"on_refresh\")",
+        "name": "on_refresh"
+      },
+      "on_theme": {
+        "body": "print(\"on_theme\")",
+        "name": "on_theme"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Sidebar navigation, KPI cards and a chart using flex + grid.",
+      "name": "Dashboard",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "active_users_card": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 110.0,
+          "w": 260.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 1,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "active_users_card",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Active users Card",
+        "page": 0,
+        "parentId": "content",
+        "props": {
+          "title": "Active users",
+          "title_align": "left"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label_frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "active_users_progress": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 16.0,
+          "w": 200.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "active_users_progress",
+        "layout": null,
+        "locked": false,
+        "name": "Active users Progress",
+        "page": 0,
+        "parentId": "active_users_card",
+        "props": {
+          "maximum": 100,
+          "mode": "determinate",
+          "orientation": "horizontal",
+          "show_text": false,
+          "value": 55
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "progressbar",
+        "visible": true,
+        "zIndex": 1
+      },
+      "active_users_value": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "active_users_value",
+        "layout": null,
+        "locked": false,
+        "name": "Active users Value",
+        "page": 0,
+        "parentId": "active_users_card",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "3,481",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "app_title": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "app_title",
+        "layout": null,
+        "locked": false,
+        "name": "App Title",
+        "page": 0,
+        "parentId": "header",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Acme Analytics",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 18
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "body": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "body",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 0.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Body",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "content": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "content",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "grid",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            0,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Content",
+        "page": 0,
+        "parentId": "body",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 1
+      },
+      "conversion_card": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 110.0,
+          "w": 260.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 2,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "conversion_card",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Conversion Card",
+        "page": 0,
+        "parentId": "content",
+        "props": {
+          "title": "Conversion",
+          "title_align": "left"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label_frame",
+        "visible": true,
+        "zIndex": 2
+      },
+      "conversion_progress": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 16.0,
+          "w": 200.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "conversion_progress",
+        "layout": null,
+        "locked": false,
+        "name": "Conversion Progress",
+        "page": 0,
+        "parentId": "conversion_card",
+        "props": {
+          "maximum": 100,
+          "mode": "determinate",
+          "orientation": "horizontal",
+          "show_text": false,
+          "value": 30
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "progressbar",
+        "visible": true,
+        "zIndex": 1
+      },
+      "conversion_value": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "conversion_value",
+        "layout": null,
+        "locked": false,
+        "name": "Conversion Value",
+        "page": 0,
+        "parentId": "conversion_card",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "4.2%",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "dark": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "toggle": "on_theme"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "dark",
+        "layout": null,
+        "locked": false,
+        "name": "Dark",
+        "page": 0,
+        "parentId": "sidebar",
+        "props": {
+          "checked": false,
+          "text": "Dark theme"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "switch",
+        "visible": true,
+        "zIndex": 3
+      },
+      "header": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 56.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "header",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 12.0,
+          "justify": "space_between",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Header",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "home": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_nav_home"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "home",
+        "layout": null,
+        "locked": false,
+        "name": "Home",
+        "page": 0,
+        "parentId": "sidebar",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Home"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 0
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 600.0,
+          "w": 900.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 0.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 600,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Dashboard",
+          "width": 900
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "refresh": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_refresh"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "refresh",
+        "layout": null,
+        "locked": false,
+        "name": "Refresh",
+        "page": 0,
+        "parentId": "header",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Refresh"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "reports": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_nav_reports"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "reports",
+        "layout": null,
+        "locked": false,
+        "name": "Reports",
+        "page": 0,
+        "parentId": "sidebar",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Reports"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 1
+      },
+      "revenue_card": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 110.0,
+          "w": 260.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "revenue_card",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Revenue Card",
+        "page": 0,
+        "parentId": "content",
+        "props": {
+          "title": "Revenue",
+          "title_align": "left"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label_frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "revenue_progress": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 16.0,
+          "w": 200.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "revenue_progress",
+        "layout": null,
+        "locked": false,
+        "name": "Revenue Progress",
+        "page": 0,
+        "parentId": "revenue_card",
+        "props": {
+          "maximum": 100,
+          "mode": "determinate",
+          "orientation": "horizontal",
+          "show_text": false,
+          "value": 72
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "progressbar",
+        "visible": true,
+        "zIndex": 1
+      },
+      "revenue_value": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "revenue_value",
+        "layout": null,
+        "locked": false,
+        "name": "Revenue Value",
+        "page": 0,
+        "parentId": "revenue_card",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "$48,200",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "sales_chart": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 240.0,
+          "w": 360.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 3,
+          "row": 1,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "sales_chart",
+        "layout": null,
+        "locked": false,
+        "name": "Sales Chart",
+        "page": 0,
+        "parentId": "content",
+        "props": {
+          "kind": "bar",
+          "title": "Monthly sales",
+          "x": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr"
+          ],
+          "x_label": "",
+          "y": [
+            "12",
+            "19",
+            "8",
+            "15"
+          ],
+          "y_label": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "chart",
+        "visible": true,
+        "zIndex": 3
+      },
+      "sidebar": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 180.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "sidebar",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Sidebar",
+        "page": 0,
+        "parentId": "body",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      },
+      "users": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 110.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_nav_users"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "users",
+        "layout": null,
+        "locked": false,
+        "name": "Users",
+        "page": 0,
+        "parentId": "sidebar",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Users"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f8fafc",
+      "border": "#e2e8f0",
+      "borderWidth": 1,
+      "buttonRadius": 6,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#64748b",
+      "preset": "light",
+      "primary": "#2563eb",
+      "primaryHover": "#1d4ed8",
+      "surface": "#ffffff",
+      "text": "#0f172a"
+    }
+  },
+  "template": {
+    "category": "Apps",
+    "description": "Sidebar navigation, KPI cards and a chart using flex + grid.",
+    "name": "Dashboard",
+    "tags": [
+      "flex",
+      "grid",
+      "chart"
+    ]
+  }
+}

@@ -1,100 +1,281 @@
 {
-    "adapter": "pyside6",
-    "meta": {
-        "name": "minimal"
-    },
-    "nodes": {
-        "11111111-1111-4111-8111-111111111111": {
-            "id": "11111111-1111-4111-8111-111111111111",
-            "layout": {
-                "anchors": {
-                    "bottom": false,
-                    "left": true,
-                    "right": false,
-                    "top": true
-                },
-                "box": {
-                    "h": 480,
-                    "w": 640,
-                    "x": 0,
-                    "y": 0
-                },
-                "margins": {
-                    "bottom": 0,
-                    "left": 0,
-                    "right": 0,
-                    "top": 0
-                }
-            },
-            "name": "MainWindow",
-            "parentId": null,
-            "props": {
-                "height": 480,
-                "title": "Hello",
-                "width": 640
-            },
-            "type": "window",
-            "zIndex": 0
-        },
-        "22222222-2222-4222-8222-222222222222": {
-            "id": "22222222-2222-4222-8222-222222222222",
-            "layout": {
-                "anchors": {
-                    "bottom": false,
-                    "left": true,
-                    "right": false,
-                    "top": true
-                },
-                "box": {
-                    "h": 400,
-                    "w": 600,
-                    "x": 12,
-                    "y": 12
-                },
-                "margins": {
-                    "bottom": 0,
-                    "left": 0,
-                    "right": 0,
-                    "top": 0
-                }
-            },
-            "name": "Content",
-            "parentId": "11111111-1111-4111-8111-111111111111",
-            "props": {},
-            "type": "frame",
-            "zIndex": 0
-        },
-        "33333333-3333-4333-8333-333333333333": {
-            "id": "33333333-3333-4333-8333-333333333333",
-            "layout": {
-                "anchors": {
-                    "bottom": false,
-                    "left": true,
-                    "right": false,
-                    "top": true
-                },
-                "box": {
-                    "h": 24,
-                    "w": 200,
-                    "x": 8,
-                    "y": 8
-                },
-                "margins": {
-                    "bottom": 0,
-                    "left": 0,
-                    "right": 0,
-                    "top": 0
-                }
-            },
-            "name": "Title",
-            "parentId": "22222222-2222-4222-8222-222222222222",
-            "props": {
-                "text": "Welcome to py_vui"
-            },
-            "type": "label",
-            "zIndex": 0
+  "assets": [],
+  "customCode": "",
+  "editor": {},
+  "extraRequirements": [],
+  "framework": "tkinter",
+  "handlers": {
+    "on_greet": {
+      "body": "print(\"Hello from py_vui!\")",
+      "name": "on_greet"
+    }
+  },
+  "meta": {
+    "author": "",
+    "createdAt": null,
+    "description": "Smallest useful py_vui project: a label, an input and a button.",
+    "name": "minimal",
+    "updatedAt": null,
+    "version": "0.1.0"
+  },
+  "nodes": {
+    "018c82b1-d2f7-4bc0-ba41-db27a089c188": {
+      "anchors": {
+        "bottom": false,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "box": {
+        "h": 34.0,
+        "w": 120.0,
+        "x": 24.0,
+        "y": 112.0
+      },
+      "cell": {
+        "column": 0,
+        "columnSpan": 1,
+        "row": 0,
+        "rowSpan": 1,
+        "sticky": "nsew"
+      },
+      "enabled": true,
+      "events": {
+        "click": "on_greet"
+      },
+      "flex": {
+        "alignSelf": "auto",
+        "grow": 0.0,
+        "margin": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
         }
+      },
+      "id": "018c82b1-d2f7-4bc0-ba41-db27a089c188",
+      "layout": null,
+      "locked": false,
+      "name": "Greet",
+      "page": 0,
+      "parentId": "e7004a93-3282-4c9b-ba2f-a95908bb9423",
+      "props": {
+        "compound": "left",
+        "default": false,
+        "image": "",
+        "text": "Greet"
+      },
+      "style": {},
+      "tabIndex": null,
+      "tooltip": "",
+      "type": "button",
+      "visible": true,
+      "zIndex": 0
     },
-    "rootId": "11111111-1111-4111-8111-111111111111",
-    "schemaVersion": "1"
+    "b94d04ce-ae32-42b5-9786-f7b822e4534a": {
+      "anchors": {
+        "bottom": false,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "box": {
+        "h": 32.0,
+        "w": 300.0,
+        "x": 24.0,
+        "y": 64.0
+      },
+      "cell": {
+        "column": 0,
+        "columnSpan": 1,
+        "row": 0,
+        "rowSpan": 1,
+        "sticky": "nsew"
+      },
+      "enabled": true,
+      "events": {},
+      "flex": {
+        "alignSelf": "auto",
+        "grow": 0.0,
+        "margin": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "id": "b94d04ce-ae32-42b5-9786-f7b822e4534a",
+      "layout": null,
+      "locked": false,
+      "name": "Name",
+      "page": 0,
+      "parentId": "e7004a93-3282-4c9b-ba2f-a95908bb9423",
+      "props": {
+        "justify": "left",
+        "max_length": 0,
+        "placeholder": "Your name",
+        "readonly": false,
+        "show": "",
+        "text": ""
+      },
+      "style": {},
+      "tabIndex": null,
+      "tooltip": "",
+      "type": "entry",
+      "visible": true,
+      "zIndex": 0
+    },
+    "e2723db7-ce52-45db-b979-ac40d0dd427b": {
+      "anchors": {
+        "bottom": false,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "box": {
+        "h": 28.0,
+        "w": 300.0,
+        "x": 24.0,
+        "y": 24.0
+      },
+      "cell": {
+        "column": 0,
+        "columnSpan": 1,
+        "row": 0,
+        "rowSpan": 1,
+        "sticky": "nsew"
+      },
+      "enabled": true,
+      "events": {},
+      "flex": {
+        "alignSelf": "auto",
+        "grow": 0.0,
+        "margin": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "id": "e2723db7-ce52-45db-b979-ac40d0dd427b",
+      "layout": null,
+      "locked": false,
+      "name": "Greeting",
+      "page": 0,
+      "parentId": "e7004a93-3282-4c9b-ba2f-a95908bb9423",
+      "props": {
+        "anchor": "w",
+        "image": "",
+        "justify": "left",
+        "text": "Hello, py_vui",
+        "wrap_length": 0
+      },
+      "style": {},
+      "tabIndex": null,
+      "tooltip": "",
+      "type": "label",
+      "visible": true,
+      "zIndex": 0
+    },
+    "e7004a93-3282-4c9b-ba2f-a95908bb9423": {
+      "anchors": {
+        "bottom": false,
+        "left": true,
+        "right": false,
+        "top": true
+      },
+      "box": {
+        "h": 200.0,
+        "w": 360.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "cell": {
+        "column": 0,
+        "columnSpan": 1,
+        "row": 0,
+        "rowSpan": 1,
+        "sticky": "nsew"
+      },
+      "enabled": true,
+      "events": {},
+      "flex": {
+        "alignSelf": "auto",
+        "grow": 0.0,
+        "margin": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        }
+      },
+      "id": "e7004a93-3282-4c9b-ba2f-a95908bb9423",
+      "layout": {
+        "align": "stretch",
+        "columnGap": 8.0,
+        "columnWeights": [
+          1,
+          1
+        ],
+        "direction": "column",
+        "gap": 8.0,
+        "justify": "start",
+        "mode": "absolute",
+        "padding": {
+          "bottom": 8.0,
+          "left": 8.0,
+          "right": 8.0,
+          "top": 8.0
+        },
+        "rowGap": 8.0,
+        "rowWeights": [
+          1,
+          1
+        ],
+        "wrap": false
+      },
+      "locked": false,
+      "name": "Main Window",
+      "page": 0,
+      "parentId": null,
+      "props": {
+        "always_on_top": false,
+        "height": 200,
+        "icon": "",
+        "maximized": false,
+        "menus": [],
+        "min_height": 0,
+        "min_width": 0,
+        "resizable_x": true,
+        "resizable_y": true,
+        "title": "Minimal",
+        "width": 360
+      },
+      "style": {},
+      "tabIndex": null,
+      "tooltip": "",
+      "type": "window",
+      "visible": true,
+      "zIndex": 0
+    }
+  },
+  "rootId": "e7004a93-3282-4c9b-ba2f-a95908bb9423",
+  "schemaVersion": "2",
+  "tabOrder": [],
+  "theme": {
+    "appearance": "light",
+    "background": "#f4f4f5",
+    "border": "#d4d4d8",
+    "borderWidth": 1,
+    "buttonRadius": 10,
+    "buttonText": "#ffffff",
+    "fontFamily": "Helvetica Neue",
+    "fontSize": 13,
+    "mutedText": "#71717a",
+    "preset": "modern",
+    "primary": "#6366f1",
+    "primaryHover": "#4f46e5",
+    "surface": "#ffffff",
+    "text": "#18181b"
+  }
 }

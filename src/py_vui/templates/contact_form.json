@@ -1,0 +1,720 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_clear": {
+        "body": "print(\"Form cleared\")",
+        "name": "on_clear"
+      },
+      "on_send": {
+        "body": "print(\"Message sent\")",
+        "name": "on_send"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Absolute-positioned contact form with message box.",
+      "name": "Contact Form",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "clear": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 100.0,
+          "x": 250.0,
+          "y": 440.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_clear"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "clear",
+        "layout": null,
+        "locked": false,
+        "name": "Clear",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Clear"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 9
+      },
+      "email": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 430.0,
+          "x": 24.0,
+          "y": 158.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "email",
+        "layout": null,
+        "locked": false,
+        "name": "Email",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "you@example.com",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 4
+      },
+      "email_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 100.0,
+          "x": 24.0,
+          "y": 134.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "email_label",
+        "layout": null,
+        "locked": false,
+        "name": "Email Label",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Email",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 3
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 520.0,
+          "w": 480.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "absolute",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 520,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Contact Form",
+          "width": 480
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "message": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 130.0,
+          "w": 430.0,
+          "x": 24.0,
+          "y": 286.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "message",
+        "layout": null,
+        "locked": false,
+        "name": "Message",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "placeholder": "",
+          "readonly": false,
+          "scrollbar": true,
+          "text": "",
+          "wrap": "word"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "text",
+        "visible": true,
+        "zIndex": 8
+      },
+      "message_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 100.0,
+          "x": 24.0,
+          "y": 262.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "message_label",
+        "layout": null,
+        "locked": false,
+        "name": "Message Label",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Message",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 7
+      },
+      "name": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 430.0,
+          "x": 24.0,
+          "y": 94.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "name",
+        "layout": null,
+        "locked": false,
+        "name": "Name",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 2
+      },
+      "name_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 100.0,
+          "x": 24.0,
+          "y": 70.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "name_label",
+        "layout": null,
+        "locked": false,
+        "name": "Name Label",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Name",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 1
+      },
+      "send": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 94.0,
+          "x": 360.0,
+          "y": 440.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_send"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "send",
+        "layout": null,
+        "locked": false,
+        "name": "Send",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Send"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 10
+      },
+      "title": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 36.0,
+          "w": 400.0,
+          "x": 24.0,
+          "y": 20.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "title",
+        "layout": null,
+        "locked": false,
+        "name": "Title",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Contact us",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "topic": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 430.0,
+          "x": 24.0,
+          "y": 222.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "topic",
+        "layout": null,
+        "locked": false,
+        "name": "Topic",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "current": 0,
+          "editable": false,
+          "items": [
+            "General question",
+            "Support",
+            "Feedback",
+            "Partnership"
+          ]
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "combobox",
+        "visible": true,
+        "zIndex": 6
+      },
+      "topic_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 100.0,
+          "x": 24.0,
+          "y": 198.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "topic_label",
+        "layout": null,
+        "locked": false,
+        "name": "Topic Label",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Topic",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 5
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#ecfeff",
+      "border": "#a5f3fc",
+      "borderWidth": 1,
+      "buttonRadius": 8,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#0e7490",
+      "preset": "ocean",
+      "primary": "#0891b2",
+      "primaryHover": "#0e7490",
+      "surface": "#ffffff",
+      "text": "#164e63"
+    }
+  },
+  "template": {
+    "category": "Forms",
+    "description": "Absolute-positioned contact form with message box.",
+    "name": "Contact Form",
+    "tags": [
+      "form",
+      "absolute"
+    ]
+  }
+}

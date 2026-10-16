@@ -1,0 +1,517 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_export": {
+        "body": "print(\"on_export\")",
+        "name": "on_export"
+      },
+      "on_filter": {
+        "body": "print(\"on_filter\")",
+        "name": "on_filter"
+      },
+      "on_row_select": {
+        "body": "print(\"on_row_select\")",
+        "name": "on_row_select"
+      },
+      "on_search": {
+        "body": "print(\"on_search\")",
+        "name": "on_search"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Searchable table with filter and export.",
+      "name": "Data Table Viewer",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "data": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 160.0,
+          "w": 320.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "select": "on_row_select"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "data",
+        "layout": null,
+        "locked": false,
+        "name": "Data",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "columns": [
+            "ID",
+            "Name",
+            "Email",
+            "Status"
+          ],
+          "editable": false,
+          "rows": [
+            [
+              "1",
+              "Ada Lovelace",
+              "ada@example.com",
+              "Active"
+            ],
+            [
+              "2",
+              "Alan Turing",
+              "alan@example.com",
+              "Active"
+            ],
+            [
+              "3",
+              "Grace Hopper",
+              "grace@example.com",
+              "Archived"
+            ],
+            [
+              "4",
+              "Linus Torvalds",
+              "linus@example.com",
+              "Active"
+            ]
+          ],
+          "selection_mode": "single",
+          "show_header": true
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "table",
+        "visible": true,
+        "zIndex": 1
+      },
+      "export": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 100.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_export"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "export",
+        "layout": null,
+        "locked": false,
+        "name": "Export",
+        "page": 0,
+        "parentId": "toolbar",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Export CSV"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      },
+      "filter": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 150.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "change": "on_filter"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "filter",
+        "layout": null,
+        "locked": false,
+        "name": "Filter",
+        "page": 0,
+        "parentId": "toolbar",
+        "props": {
+          "current": 0,
+          "editable": false,
+          "items": [
+            "All",
+            "Active",
+            "Archived"
+          ]
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "combobox",
+        "visible": true,
+        "zIndex": 1
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 480.0,
+          "w": 760.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 12.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 480,
+          "icon": "",
+          "maximized": false,
+          "menus": [],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Data Table Viewer",
+          "width": 760
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "search": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 260.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "change": "on_search"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 1.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "search",
+        "layout": null,
+        "locked": false,
+        "name": "Search",
+        "page": 0,
+        "parentId": "toolbar",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "Search...",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 0
+      },
+      "status": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 22.0,
+          "w": 120.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "status",
+        "layout": null,
+        "locked": false,
+        "name": "Status",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "4 rows",
+          "wrap_length": 0
+        },
+        "style": {
+          "foreground": "#71717a"
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 2
+      },
+      "toolbar": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 44.0,
+          "w": 240.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "toolbar",
+        "layout": {
+          "align": "center",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "row",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "flex",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Toolbar",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {},
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "frame",
+        "visible": true,
+        "zIndex": 0
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f4f4f5",
+      "border": "#d4d4d8",
+      "borderWidth": 1,
+      "buttonRadius": 10,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#71717a",
+      "preset": "modern",
+      "primary": "#6366f1",
+      "primaryHover": "#4f46e5",
+      "surface": "#ffffff",
+      "text": "#18181b"
+    }
+  },
+  "template": {
+    "category": "Data",
+    "description": "Searchable table with filter and export.",
+    "name": "Data Table Viewer",
+    "tags": [
+      "table",
+      "flex"
+    ]
+  }
+}

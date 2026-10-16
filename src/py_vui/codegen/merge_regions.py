@@ -1,59 +1,77 @@
+"""handlers.py rendering with user-code regions that survive regeneration."""
+
 from __future__ import annotations
 
 import re
+import textwrap
+
+from py_vui.core.model import Project
 
 BEGIN = "# py_vui: begin custom"
 END = "# py_vui: end custom"
+MODULE_BEGIN = "# py_vui: begin module"
+MODULE_END = "# py_vui: end module"
+
+_DEF_RE = re.compile(r"^def (\w+)\(event=None\):\n", re.MULTILINE)
 
 
-def wrap_custom_block(body: str, *, indent: str = "") -> str:
-    lines = [f"{indent}{BEGIN}", body.rstrip(), f"{indent}{END}"]
-    return "\n".join(lines) + "\n"
+def _region(source: str, begin: str, end: str, start: int = 0, stop: int | None = None) -> str | None:
+    seg = source[start:stop]
+    m = re.search(rf"^[ \t]*{re.escape(begin)}\n(.*?)^[ \t]*{re.escape(end)}", seg, re.S | re.M)
+    return m.group(1) if m else None
 
 
-def extract_custom_block(source: str, *, function_name: str | None = None) -> str | None:
-    """Return text inside custom region for whole file or within a function."""
-    if function_name:
-        pattern = (
-            rf"def {re.escape(function_name)}\([^)]*\)[^:]*:\n"
-            rf"(?:.*?\n)*?"
-            rf"(\s*{re.escape(BEGIN)}\n.*?\n\s*{re.escape(END)})"
-        )
-        match = re.search(pattern, source, re.DOTALL)
-        if match:
-            block = match.group(1)
-            return _strip_markers(block)
-        return None
-    match = re.search(
-        rf"{re.escape(BEGIN)}\n(.*?\n){re.escape(END)}",
-        source,
-        re.DOTALL,
-    )
-    if not match:
-        return None
-    return match.group(1).rstrip() + "\n"
+def parse_handler_bodies(source: str) -> dict[str, str]:
+    """Extract ``{handler_name: body}`` from a previously generated handlers.py."""
+    out: dict[str, str] = {}
+    matches = list(_DEF_RE.finditer(source))
+    for i, m in enumerate(matches):
+        stop = matches[i + 1].start() if i + 1 < len(matches) else None
+        body = _region(source, BEGIN, END, m.end(), stop)
+        if body is not None:
+            out[m.group(1)] = textwrap.dedent(body).rstrip() or "pass"
+    return out
 
 
-def _strip_markers(block: str) -> str:
-    lines = []
-    for line in block.splitlines():
-        stripped = line.strip()
-        if stripped in (BEGIN, END):
-            continue
-        lines.append(line)
-    return "\n".join(lines).rstrip() + "\n" if lines else ""
+def parse_module_code(source: str) -> str | None:
+    body = _region(source, MODULE_BEGIN, MODULE_END)
+    return textwrap.dedent(body).rstrip() if body is not None else None
 
 
-def merge_function_body(
-    existing_source: str | None,
-    function_name: str,
-    new_body: str,
-    *,
-    default_body: str = "pass",
-) -> str:
-    preserved = None
-    if existing_source:
-        preserved = extract_custom_block(existing_source, function_name=function_name)
-    body = preserved if preserved else new_body.strip() or default_body
-    indented = "\n".join("    " + ln if ln.strip() else "    pass" for ln in body.splitlines())
-    return f"def {function_name}() -> None:\n    {BEGIN}\n{indented}\n    {END}\n"
+def render_handler(name: str, body: str) -> str:
+    body = textwrap.dedent(body).rstrip() or "pass"
+    indented = textwrap.indent(body, "    ")
+    return f"def {name}(event=None):\n    {BEGIN}\n{indented}\n    {END}\n"
+
+
+def render_handlers_module(project: Project, existing: str | None = None) -> str:
+    bodies = parse_handler_bodies(existing) if existing else {}
+    module = (parse_module_code(existing) if existing else None) or project.custom_code
+    parts = [
+        '"""Event handlers. Edit between the py_vui markers; they are kept on regeneration."""',
+        "",
+        MODULE_BEGIN,
+        module.rstrip(),
+        MODULE_END,
+        "",
+    ]
+    for name in sorted(project.handlers):
+        h = project.handlers[name]
+        parts.append("")
+        parts.append(render_handler(name, bodies.get(name, h.body)))
+    return "\n".join(parts).rstrip() + "\n"
+
+
+def sync_handlers_from_source(project: Project, source: str) -> int:
+    """Pull edited handler bodies / module code from handlers.py into the project."""
+    changed = 0
+    for name, body in parse_handler_bodies(source).items():
+        h = project.handlers.get(name)
+        if h is not None and h.body.strip() != body.strip():
+            h.body = body
+            changed += 1
+    module = parse_module_code(source)
+    if module is not None and module.strip() != project.custom_code.strip():
+        project.custom_code = module
+        changed += 1
+    return changed

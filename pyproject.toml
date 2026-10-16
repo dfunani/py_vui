@@ -1,64 +1,102 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "py_vui"
-version = "0.1.0"
-description = "Visual authoring for Python UIs — drag-and-drop editor with PySide6 code generation"
+name = "py-vui"
+version = "0.2.0"
+description = "Visual drag-and-drop GUI builder for Python: generate Tkinter, CustomTkinter, PySide6/PyQt6 and Kivy apps."
 readme = "README.md"
 license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 authors = [{ name = "Delali Funani" }]
-keywords = ["ui", "qt", "pyside6", "visual", "codegen", "gui-builder"]
+keywords = [
+    "gui", "gui-builder", "ui-designer", "drag-and-drop", "tkinter", "customtkinter",
+    "pyside6", "pyqt6", "kivy", "code-generator", "low-code",
+]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
     "Intended Audience :: Developers",
+    "Intended Audience :: Education",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Code Generators",
     "Topic :: Software Development :: User Interfaces",
+    "Topic :: Software Development :: Widget Sets",
+    "Typing :: Typed",
 ]
 dependencies = [
     "pydantic>=2.6",
+    "PySide6>=6.6",
 ]
 
 [project.urls]
 Homepage = "https://github.com/dfunani/py_vui"
 Repository = "https://github.com/dfunani/py_vui"
-Documentation = "https://github.com/dfunani/py_vui#readme"
+Documentation = "https://github.com/dfunani/py_vui/tree/main/docs"
 Issues = "https://github.com/dfunani/py_vui/issues"
-Changelog = "https://github.com/dfunani/py_vui/releases"
+Changelog = "https://github.com/dfunani/py_vui/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
+# Runtime packages for *previewing* generated apps (the editor itself needs none of these;
+# the editor can also create a per-project preview venv on demand).
+customtkinter = ["customtkinter>=5.2", "pillow>=10"]
+pyqt6 = ["PyQt6>=6.6"]
+kivy = ["kivy>=2.3"]
+plugins = [
+    "tkcalendar>=1.6", "tkintermapview>=1.29", "tktimepicker>=2.0",
+    "matplotlib>=3.8", "pandas>=2.0", "pandastable>=0.13", "tkvideoplayer>=2.3", "pillow>=10",
+]
+build = ["pyinstaller>=6.6"]
+all = ["py-vui[customtkinter,pyqt6,kivy,plugins]"]
+gui = []  # backwards compatible alias: PySide6 is now a core dependency
 dev = [
     "pytest>=8.0",
-    "ruff>=0.4",
-]
-gui = [
-    "PySide6>=6.6",
-]
-codegen = [
-    "PySide6>=6.6",
+    "pytest-timeout>=2.3",
+    "ruff>=0.5",
+    "build>=1.2",
+    "twine>=5",
 ]
 
 [project.scripts]
-py_vui = "py_vui.app.qt_main:main"
+py_vui = "py_vui.cli:main"
+py-vui = "py_vui.cli:main"
+
+[project.gui-scripts]
+py_vui-gui = "py_vui.cli:gui_main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["py_vui*"]
 exclude = ["tests*"]
 
+[tool.setuptools.package-data]
+py_vui = ["py.typed", "templates/*.json", "app/resources/*", "app/resources/**/*"]
+
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]
 pythonpath = ["src"]
+timeout = 120
+markers = [
+    "gui: needs a (virtual) display / Qt platform plugin",
+    "tk: needs a working tkinter + display",
+    "kivy: needs kivy and an OpenGL window",
+]
 
 [tool.ruff]
 line-length = 100
 src = ["src"]
+target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF100"]
+ignore = ["E501", "B008", "SIM108"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/tests/*" = ["B", "SIM"]

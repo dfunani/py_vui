@@ -1,0 +1,615 @@
+{
+  "project": {
+    "assets": [],
+    "customCode": "",
+    "editor": {},
+    "extraRequirements": [],
+    "framework": "tkinter",
+    "handlers": {
+      "on_close_settings": {
+        "body": "print(\"Dialog closed\")",
+        "name": "on_close_settings"
+      },
+      "on_open_settings": {
+        "body": "print(\"Open the Settings dialog here\")\n# The dialog is defined in ui.py (see WINDOWS) and can be shown on demand.",
+        "name": "on_open_settings"
+      },
+      "on_quit": {
+        "body": "raise SystemExit",
+        "name": "on_quit"
+      },
+      "on_save_settings": {
+        "body": "print(\"Settings saved\")",
+        "name": "on_save_settings"
+      }
+    },
+    "meta": {
+      "author": "",
+      "createdAt": null,
+      "description": "Main window that opens a settings dialog.",
+      "name": "Multi-window App",
+      "updatedAt": null,
+      "version": "0.1.0"
+    },
+    "nodes": {
+      "display_name": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 32.0,
+          "w": 320.0,
+          "x": 24.0,
+          "y": 52.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "display_name",
+        "layout": null,
+        "locked": false,
+        "name": "Display Name",
+        "page": 0,
+        "parentId": "settings_dialog",
+        "props": {
+          "justify": "left",
+          "max_length": 0,
+          "placeholder": "",
+          "readonly": false,
+          "show": "",
+          "text": ""
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "entry",
+        "visible": true,
+        "zIndex": 1
+      },
+      "hint": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 440.0,
+          "x": 32.0,
+          "y": 80.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "hint",
+        "layout": null,
+        "locked": false,
+        "name": "Hint",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Use the button below to open a dialog.",
+          "wrap_length": 0
+        },
+        "style": {
+          "foreground": "#71717a"
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 1
+      },
+      "main_window": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 360.0,
+          "w": 520.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "main_window",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "absolute",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Main Window",
+        "page": 0,
+        "parentId": null,
+        "props": {
+          "always_on_top": false,
+          "height": 360,
+          "icon": "",
+          "maximized": false,
+          "menus": [
+            {
+              "items": [
+                {
+                  "handler": "on_open_settings",
+                  "label": "Settings...",
+                  "shortcut": "Ctrl+,"
+                },
+                {
+                  "separator": true
+                },
+                {
+                  "handler": "on_quit",
+                  "label": "Quit"
+                }
+              ],
+              "title": "File"
+            }
+          ],
+          "min_height": 0,
+          "min_width": 0,
+          "resizable_x": true,
+          "resizable_y": true,
+          "title": "Multi-window App",
+          "width": 520
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "window",
+        "visible": true,
+        "zIndex": 0
+      },
+      "name_label": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 24.0,
+          "w": 120.0,
+          "x": 24.0,
+          "y": 24.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "name_label",
+        "layout": null,
+        "locked": false,
+        "name": "Name Label",
+        "page": 0,
+        "parentId": "settings_dialog",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Display name",
+          "wrap_length": 0
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      },
+      "notify": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 28.0,
+          "w": 320.0,
+          "x": 24.0,
+          "y": 100.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "notify",
+        "layout": null,
+        "locked": false,
+        "name": "Notify",
+        "page": 0,
+        "parentId": "settings_dialog",
+        "props": {
+          "checked": false,
+          "text": "Enable notifications"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "checkbox",
+        "visible": true,
+        "zIndex": 2
+      },
+      "open_settings": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 180.0,
+          "x": 32.0,
+          "y": 140.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_open_settings"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "open_settings",
+        "layout": null,
+        "locked": false,
+        "name": "Open Settings",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Open settings"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 2
+      },
+      "save": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 34.0,
+          "w": 100.0,
+          "x": 244.0,
+          "y": 180.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "click": "on_save_settings"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "save",
+        "layout": null,
+        "locked": false,
+        "name": "Save",
+        "page": 0,
+        "parentId": "settings_dialog",
+        "props": {
+          "compound": "left",
+          "default": false,
+          "image": "",
+          "text": "Save"
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "button",
+        "visible": true,
+        "zIndex": 3
+      },
+      "settings_dialog": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 240.0,
+          "w": 380.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {
+          "close": "on_close_settings"
+        },
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "settings_dialog",
+        "layout": {
+          "align": "stretch",
+          "columnGap": 8.0,
+          "columnWeights": [
+            1,
+            1
+          ],
+          "direction": "column",
+          "gap": 8.0,
+          "justify": "start",
+          "mode": "absolute",
+          "padding": {
+            "bottom": 8.0,
+            "left": 8.0,
+            "right": 8.0,
+            "top": 8.0
+          },
+          "rowGap": 8.0,
+          "rowWeights": [
+            1,
+            1
+          ],
+          "wrap": false
+        },
+        "locked": false,
+        "name": "Settings Dialog",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "always_on_top": false,
+          "height": 240,
+          "icon": "",
+          "modal": true,
+          "resizable_x": true,
+          "resizable_y": true,
+          "start_hidden": true,
+          "title": "Settings",
+          "width": 380
+        },
+        "style": {},
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "toplevel",
+        "visible": true,
+        "zIndex": 3
+      },
+      "welcome": {
+        "anchors": {
+          "bottom": false,
+          "left": true,
+          "right": false,
+          "top": true
+        },
+        "box": {
+          "h": 40.0,
+          "w": 440.0,
+          "x": 32.0,
+          "y": 32.0
+        },
+        "cell": {
+          "column": 0,
+          "columnSpan": 1,
+          "row": 0,
+          "rowSpan": 1,
+          "sticky": "nsew"
+        },
+        "enabled": true,
+        "events": {},
+        "flex": {
+          "alignSelf": "auto",
+          "grow": 0.0,
+          "margin": {
+            "bottom": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0
+          }
+        },
+        "id": "welcome",
+        "layout": null,
+        "locked": false,
+        "name": "Welcome",
+        "page": 0,
+        "parentId": "main_window",
+        "props": {
+          "anchor": "w",
+          "image": "",
+          "justify": "left",
+          "text": "Main window",
+          "wrap_length": 0
+        },
+        "style": {
+          "bold": true,
+          "font_size": 20
+        },
+        "tabIndex": null,
+        "tooltip": "",
+        "type": "label",
+        "visible": true,
+        "zIndex": 0
+      }
+    },
+    "rootId": "main_window",
+    "schemaVersion": "2",
+    "tabOrder": [],
+    "theme": {
+      "appearance": "light",
+      "background": "#f4f4f5",
+      "border": "#d4d4d8",
+      "borderWidth": 1,
+      "buttonRadius": 10,
+      "buttonText": "#ffffff",
+      "fontFamily": "Helvetica Neue",
+      "fontSize": 13,
+      "mutedText": "#71717a",
+      "preset": "modern",
+      "primary": "#6366f1",
+      "primaryHover": "#4f46e5",
+      "surface": "#ffffff",
+      "text": "#18181b"
+    }
+  },
+  "template": {
+    "category": "Apps",
+    "description": "Main window that opens a settings dialog.",
+    "name": "Multi-window App",
+    "tags": [
+      "dialog",
+      "absolute",
+      "menus"
+    ]
+  }
+}
